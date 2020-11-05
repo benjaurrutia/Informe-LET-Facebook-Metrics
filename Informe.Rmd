@@ -1,31 +1,37 @@
 ---
-title: "INFROEM"
+title: "Estadísticas de Facebook"
 author: "Benjamín Urrutia"
-date: "05-11-2020"
-output: html_document
+date: "30-10-2020"
+output:   
+  rmarkdown::html_document:
+    theme: spacelab
+    toc: true
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE, message= FALSE,warning=FALSE)
 ```
 
-## R Markdown ss
-intioenflkdnfñadskjfnñadskfsd
+# Introducción
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+Hoy en día las redes sociales son cada vez más comunes entre las personas, llegando al punto en el que es casi imposible conocer a alguien que no utilice Twitter, Instagram o **Facebook**. 
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+  Esta última mencionada es una de las más conocidas. Se estima que hay alrededor de unos **2.400 millones de usuarios activos**. A nivel mundial, sabemos que millones de personas publican distintos tipos de post y cada uno con distintos objetivos, como por ejemplo, vender un producto, informar sobre algún tema, etc.
 
-```{r cars}
-summary(cars)
-```
+  Muchos usuarios buscan crecer en la red social. Para lograr esto, **es de suma importancia saber cómo se comporta tu post**. Es por esto que Facebook implementó estadísiticas de cada post que uno realiza. Independiente de cual sea el objetivo del post, uno puede tener información sobre el alcance de tu post, número de likes, interacciones, entre otras cosas. No obstante, muchos usuarios no saben como utilizar esta herramienta para analizar que tipo de publicación les conviene subir.
 
-## Including Plots
+  Es por esto que en este informe se busca **examinar que impacto tiene, en Facebook, cada tipo de post**. Vamos a analizar el alcance, el número de interacciones, likes, comentarios, entre otras cosas. Para ello, estudiaremos por separado cada tipo de post: videos, fotos, estados y link.
 
-You can also embed plots, for example:
+  En este trabajo vamos a **analizar detalladamente las variables más influyentes** de la base de datos `Facebook metrics Data Set`. Cada variable va a tener una breve explicación de lo que representa y luego vamos a ver, a través de gráficos y medidas de resúmen, como se comporta cada tipo de publicación para concluir que publicación, videos, fotos, estados o link, nos conviene compartir para tener un mayor impacto en esta red social. 
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+
+
+
+
+
+
+
