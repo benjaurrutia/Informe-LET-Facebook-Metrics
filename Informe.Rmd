@@ -15,23 +15,210 @@ knitr::opts_chunk$set(echo = FALSE, message= FALSE,warning=FALSE)
 
 # Introducción
 
-Hoy en día las redes sociales son cada vez más comunes entre las personas, llegando al punto en el que es casi imposible conocer a alguien que no utilice Twitter, Instagram o **Facebook**. 
+Hoy en día las redes sociales son cada vez más comunes entre las personas, llegando al punto en el que es muy difícil conocer a alguien que no utilice Twitter, Instagram o **Facebook**. 
 
   Esta última mencionada es una de las más conocidas. Se estima que hay alrededor de unos **2.400 millones de usuarios activos**. A nivel mundial, sabemos que millones de personas publican distintos tipos de post y cada uno con distintos objetivos, como por ejemplo, vender un producto, informar sobre algún tema, etc.
 
-  Muchos usuarios buscan crecer en la red social. Para lograr esto, **es de suma importancia saber cómo se comporta tu post**. Es por esto que Facebook implementó estadísiticas de cada post que uno realiza. Independiente de cual sea el objetivo del post, uno puede tener información sobre el alcance de tu post, número de likes, interacciones, entre otras cosas. No obstante, muchos usuarios no saben como utilizar esta herramienta para analizar que tipo de publicación les conviene subir.
+  Muchos usuarios buscan crecer en la red social. Para lograr esto, **es de suma importancia saber cómo se comporta tu post**. Es por esto que Facebook implementó estadísticas de cada post que uno realiza. Independiente de cual sea el objetivo del post, uno puede tener información sobre el alcance de tu post, número de likes, interacciones, entre otras cosas. No obstante, muchos usuarios no saben como utilizar esta herramienta para sacarle un mejor provecho a sus páginas.
 
-  Es por esto que en este informe se busca **examinar que impacto tiene, en Facebook, cada tipo de post**. Vamos a analizar el alcance, el número de interacciones, likes, comentarios, entre otras cosas. Para ello, estudiaremos por separado cada tipo de post: videos, fotos, estados y link.
+  Es por esto que en este informe se busca **examinar que impacto tiene, en Facebook, cada tipo de post**. Vamos a analizar el alcance, el número de interacciones, likes, comentarios, entre otras cosas. Para ello, estudiaremos por separado cada tipo de publicación: videos, fotos, estados y link.
 
-  En este trabajo vamos a **analizar detalladamente las variables más influyentes** de la base de datos `Facebook metrics Data Set`. Cada variable va a tener una breve explicación de lo que representa y luego vamos a ver, a través de gráficos y medidas de resúmen, como se comporta cada tipo de publicación para concluir que publicación, videos, fotos, estados o link, nos conviene compartir para tener un mayor impacto en esta red social. 
-
-
+  En este trabajo vamos a **analizar detalladamente las variables más influyentes** de la base de datos `Facebook metrics Data Set`. Cada variable va a tener una breve explicación de lo que representa. Luego vamos a ver, a través de gráficos y medidas de resúmen, cómo se comporta cada tipo de post para concluir qué nos conviene compartir, videos, fotos, estados o link, para tener un mayor impacto en esta red social. 
 
 
 
+# Desarrollo 
 
 
+```{r}
+library(rio)
+library(ggplot2)
+library(psych)
+require(car)
+require(EnvStats)
+library(wesanderson)
+library(RColorBrewer)
+library(cowplot)
+library(dplyr)
+
+facebook_data=import("dataset_Facebook.csv")
+
+names(facebook_data)[1] <- "Page.Total.Likes"
+names(facebook_data)[2] <- "Type"
+names(facebook_data)[3] <- "Category"
+names(facebook_data)[4] <- "Post.Month"
+names(facebook_data)[5] <- "Post.Weekday"
+names(facebook_data)[6] <- "Post.Hour"
+names(facebook_data)[7] <- "Paid"
+names(facebook_data)[8] <- "Total.Reach" #usuarios que vieron el post
+names(facebook_data)[9] <- "Total.Impressions" #numero de veces que se vio tu post impresiones (mas de una por usuario)
+names(facebook_data)[10] <- "Engaged.Usuarios" #personas que interactuaron
+names(facebook_data)[11] <- "numero.personas.click.no.hist" #personas que interactuaron sin subir historia
+names(facebook_data)[12] <- "Total.clicks.en.post" #cada usuario puede hacer mas de un click
+names(facebook_data)[13] <- "Impressions.for.Users.Fans"#Impresiones.de.perosnas.que.siguen.tu.pagina
+names(facebook_data)[14] <- "Reach.by.Users.Fans"#usuarios que vieron el post y siguen la pag
+names(facebook_data)[15] <- "Users.Fans.and.Engagement" #usuarios que iguen la pagina e interactuan
+names(facebook_data)[16] <- "Comment"
+names(facebook_data)[17] <- "Like"
+names(facebook_data)[18] <- "Share"
+names(facebook_data)[19] <- "Total.Interactions" 
+
+Indice_foto = c()
+Indice_video = c()
+Indice_estado = c()
+Indice_link = c()
+for (i in 1:nrow(facebook_data)){
+  if (facebook_data[i,"Type"] == "Photo"){
+    Indice_foto = c(Indice_foto, i)
+  }
+  if (facebook_data[i,"Type"] == "Status"){
+    Indice_estado = c(Indice_estado, i)
+  }
+  if (facebook_data[i,"Type"] == "Link"){
+    Indice_link = c(Indice_link, i)
+  }
+  if (facebook_data[i,"Type"] == "Video"){
+    Indice_video = c(Indice_video, i)
+  }
+}
+
+estados_datos = facebook_data[Indice_estado,]
+fotos_datos = facebook_data[Indice_foto,]
+video_datos = facebook_data[Indice_video,]
+link_datos = facebook_data[Indice_link,]
 
 
+```
+
+## Distintos tipos de post
+
+Para partir nuestro analisis veamos que tipo de post hay y que tantas publicaciones tienen cada uno de estos.
+
+Entendamos como `Link` como un enlace que lleva a otra página web ,`Photo` un post que contiene una imagen y`Status` una publicación que contiene solo texto  (`Video` es autoexplicativo)
+
+Veamos gráficamente que sucede
+
+```{r}
+g1 = ggplot(data = facebook_data, aes(x = Type, fill = Type)) + 
+  geom_bar()+
+  ggtitle("Tipo de publicación")+
+  xlab("Tipo")+
+  ylab("Frecuencia")+
+  scale_fill_brewer(palette = "Accent")
+
+g1
+```
+
+Como podemos ver en el gráfico, el número de publicaciones de fotos (color morado) es mucho más alto en comparación al resto de post. 
+
+Es por esto que analizar, por ejemplo, el total de likes de cada publicación no tiene mucho sentido ya que, al haber más fotos, el total de likes va a ser mayor que el resto. No obstante, esto no significa que una foto tenga más likes que un video.
+
+Por esta razón, nuestro análisis se va a enfocar en cada tipo de post y como se comporta este.
+
+| Tipo de Post | Cantidad de publicaciones |          Porcentaje del Total               |            
+| :------------: | :-------------------------: | :-------------------------------------------: |
+| Link   |  `r  nrow(link_datos) `         | `r nrow(link_datos)/nrow(facebook_data)*100 `%   |
+| Foto   |  `r  nrow(fotos_datos) `        | `r nrow(fotos_datos)/nrow(facebook_data)*100 `%  |
+| Video  |  `r  nrow(video_datos) `        | `r nrow(video_datos)/nrow(facebook_data)*100 `%  |
+| Estado |  `r  nrow(estados_datos) `      | `r nrow(estados_datos)/nrow(facebook_data)*100 `%|
 
 
+## Categoría de la publicación
+
+Esta variable cuenta con tres tipos de categorias: **Action**, **Product** y **Inspiration**. La categoria *action*
+se refiere a __ofertas especiales y concursos__, *Product* hace referencia a __publicidad directa con contenido de marca explícito__ y, por último, *Insiration* esta relacionado con post __sin contenido de marca explícito__.
+
+Veamos gráficamente como se comportan
+
+```{r}
+p1 = ggplot(data = facebook_data, aes(x = Category, fill = Type)) + 
+  geom_bar(position=position_fill())+
+  labs( x = "Tipo", y = "Proporción")+
+  ggtitle("Tipo de publicación")+
+  scale_fill_brewer(palette = "Accent")
+
+p2 = ggplot(data = facebook_data, aes(x = Category, fill = Type)) + 
+  geom_bar()+
+  labs( x = "Tipo", y = "Frecuencia")+
+  ggtitle("Tipo de publicación")+
+  scale_fill_brewer(palette = "Accent")
+cowplot::plot_grid(p2,p1, labels = "AUTO")
+
+cat1_estados = c()
+cat2_estados = c()
+cat3_estados = c()
+for (i in 1:nrow(estados_datos)){
+  if(estados_datos[i,3] == 1){
+    cat1_estados = c(cat1_estados,i)
+  }
+  if(estados_datos[i,3] == 2){
+    cat2_estados = c(cat2_estados,i)
+  }
+  if(estados_datos[i,3] == 3){
+    cat3_estados = c(cat3_estados,i)
+  }
+}
+
+cat1_video = c()
+cat2_video = c()
+cat3_video = c()
+for (i in 1:nrow(video_datos)){
+  if(video_datos[i,3] == 1){
+    cat1_video = c(cat1_video,i)
+  }
+  if(video_datos[i,3] == 2){
+    cat2_video = c(cat2_video,i)
+  }
+  if(video_datos[i,3] == 3){
+    cat3_video = c(cat3_video,i)
+  }
+}
+
+cat1_fotos = c()
+cat2_fotos = c()
+cat3_fotos = c()
+for (i in 1:nrow(fotos_datos)){
+  if(fotos_datos[i,3] == 1){
+    cat1_fotos = c(cat1_fotos,i)
+  }
+  if(fotos_datos[i,3] == 2){
+    cat2_fotos = c(cat2_fotos,i)
+  }
+  if(fotos_datos[i,3] == 3){
+    cat3_fotos = c(cat3_fotos,i)
+  }
+}
+
+cat1_link = c()
+cat2_link = c()
+cat3_link = c()
+for (i in 1:nrow(link_datos)){
+  if(link_datos[i,3] == 1){
+    cat1_link = c(cat1_link,i)
+  }
+  if(link_datos[i,3] == 2){
+    cat2_link = c(cat2_link,i)
+  }
+  if(link_datos[i,3] == 3){
+    cat3_link = c(cat3_link,i)
+  }
+}
+
+```
+
+Como podemos ver en el primer gráfico, hay una mayor cantidad de post dentro de la categoria *Action*, seguido de *Inspiration* y, por último, *Product*. 
+
+En el segundo, vemos de manera gráfica la proporción de cada post dentro de cada categoría.
+
+Veamos numericamente como se comporta cada tipo publicación
+
+| Tipo de Post | Categoria 1 | Categoria 2 | Categoria 3 |
+| :----------: | :---------: | :---------: | :---------: |
+| Link         |  `r  length(cat1_link)  ` | `r length(cat2_link)`   | `r length(cat3_link)`|
+| Foto         |  `r  length(cat1_fotos)  `| `r length(cat2_fotos)`   | `r length(cat3_fotos)`|
+| Video        |  `r  length(cat1_video)  `| `r length(cat2_video)`  | `r length(cat3_video)`|
+| Estado       |  `r  length(cat1_estados) `| `r length(cat2_estados)` | `r length(cat3_estados)`|
+
+Como mencionamos antes, generalmente, los links y videos son para concursos y ofertas especiales mientras que los estados se relacionan en su mayoría con publicidad directa. En las fotos pasa algo similiar, hay una gran cantidad dentro de la categoria Action, seguido de Inspiration y, por último, Product.
+
+Teniendo en cuenta como se suelen utlizan los tipos de post, veamos los impactos que estos tienen dentro de Facebook.

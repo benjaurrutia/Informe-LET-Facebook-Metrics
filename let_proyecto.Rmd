@@ -25,7 +25,7 @@ library(psych)
 require(car)
 require(EnvStats)
 
-facebook_data=import("dataset_Facebookk.txt")
+facebook_data=import("dataset_Facebook.csv")
 
 names(facebook_data)[1] <- "Page.Total.Likes"
 names(facebook_data)[2] <- "Type"
@@ -460,6 +460,115 @@ resumen_link_cls
 resumen_estados_cls
 resumen_fotos_cls
 resumen_video_cls
+```
+
+```{r}
+datos_importantes= facebook_data
+datos_importantes = select(datos_importantes,"Total.Reach" , "Total.Impressions" , "Engaged.Usuarios",
+                         "numero.personas.click.no.hist", "Comment",
+                         "Like", "Share" )
+mo_lineal_multipe = lm(Total.Reach ~ Total.Impressions + Engaged.Usuarios + 
+                         numero.personas.click.no.hist+
+                         Like+ Share + Comment,data = datos_importantes)
+summary(mo_lineal_multipe)
+
+mo_lineal_multipe_2 = lm(Total.Reach ~ Engaged.Usuarios + Total.Impressions + numero.personas.click.no.hist + Like, data = datos_importantes)
+summary(mo_lineal_multipe_2)
+```
+
+```{r}
+residuos_estandar = rstandard(mo_lineal_multipe_2)
+valores_ajustados = fitted(mo_lineal_multipe_2)
+plot(valores_ajustados, residuos_estandar)
+
+qqnorm(residuos_estandar)
+qqline(residuos_estandar)
+
+qqnorm(facebook_data$Total.Reach)
+qqline(facebook_data$Total.Reach)
+
+library(Johnson)
+newxd = RE.Johnson(facebook_data$Total.Reach)$transformed
+
+ks.test(newxd, pnorm, mean(newxd), sd(newxd))
+qqnorm(newxd)
+qqline(newxd)
+
+
+```
+
+```{r}
+mo_lineal_multipe = lm(newxd ~ Total.Impressions + Engaged.Usuarios + 
+                         numero.personas.click.no.hist+
+                         Like+ Share + Comment ,data = datos_importantes)
+summary(mo_lineal_multipe)
+
+mo_lineal_multipe = lm(newxd ~ Total.Impressions + Engaged.Usuarios + 
+                         Like+ Share + Comment ,data = datos_importantes)
+mo_lineal_multipe = lm(newxd ~  Engaged.Usuarios + 
+                         Like+ Share  ,data = datos_importantes)
+
+residuos_estandar = rstandard(mo_lineal_multipe)
+valores_ajustados = fitted(mo_lineal_multipe)
+plot(valores_ajustados, residuos_estandar)
+
+qqnorm(residuos_estandar)
+qqline(residuos_estandar)
+ks.test(residuos_estandar, pnorm, mean(residuos_estandar), sd(residuos_estandar))
+
+step(  lm(newxd~., data = datos_importantes), direction = "both"   )
+summary(lm(newxd~Share + Total.Impressions + Engaged.Usuarios + Comment + numero.personas.click.no.hist
+           + Like, data = datos_importantes))
+mod_f = lm(newxd~  Total.Impressions + Comment + Engaged.Usuarios + Like,data = datos_importantes)
+summary(lm(newxd~  Total.Impressions + Comment + Engaged.Usuarios + Like, data = datos_importantes))
+
+residuos_estandar = rstandard(mod_f)
+valores_ajustados = fitted(mod_f)
+plot(valores_ajustados, residuos_estandar)
+
+qqnorm(residuos_estandar)
+qqline(residuos_estandar)
+ks.test(residuos_estandar, pnorm, mean(residuos_estandar), sd(residuos_estandar))
+library(lmtest)
+bptest(mod_f)
+
+plot(residuos_estandar, type ="l")
+
+studentized_residual <- rstudent(mod_f)
+aux = c(matrix(which(abs(studentized_residual) > 3), nrow= 1, ncol = 8))
+datos_nuevos = c()
+for(i in 1:nrow(facebook_data)){
+  if (not(i  %in% c(which(abs(studentized_residual)> 3)))){
+    message("hola")
+  }else{
+    datos_nuevos = facebook_data[i,]
+  }
+}
+
+```
+
+```{r}
+cor(facebook_data$Total.Reach, as.numeric(facebook_data$Total.Interactions))
+cor(facebook_data$Total.Reach, as.numeric(facebook_data$Comment))
+cor(facebook_data$Total.Reach, as.numeric(facebook_data$Share))
+cor(facebook_data$Total.Reach, as.numeric(facebook_data$Like))
+
+
+
+com1 = facebook_data$Reach.by.Users.Fans
+com1=com1[which(com1< 20000)]
+com2 = c(com1,rep(mean(com1),33))
+
+com11 = facebook_data$Engaged.Usuarios
+com11=com11[which(com11< 4000)]
+com22 = c(com11,rep(mean(com11),7))
+
+
+summary(lm(newxd ~  com2 + com22 , data = facebook_data))
+plot(fitted(lm(newxd ~ Reach.by.Users.Fans + Engaged.Usuarios, data = facebook_data)),rstandard(lm(newxd ~ Reach.by.Users.Fans+ Engaged.Usuarios, data = facebook_data)), xlim = c(0,1), ylim= c(-2,2))
+
+
+summary(lm(newxd ~ Total.Interactions, data = facebook_data))
 ```
 
 
