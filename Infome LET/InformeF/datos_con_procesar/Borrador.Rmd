@@ -1,0 +1,576 @@
+---
+title: "Borrador_LET"
+author: "Benjamín Urrutia"
+date: "30-10-2020"
+output:   
+  rmarkdown::html_document:
+    theme: lumen
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message= FALSE,warning=FALSE)
+```
+
+## Introducción
+
+## Desarrollo
+
+
+```{r}
+library(rio)
+library(ggplot2)
+library(psych)
+require(car)
+require(EnvStats)
+
+facebook_data=import("dataset_Facebook.csv")
+
+names(facebook_data)[1] <- "Page.Total.Likes"
+names(facebook_data)[2] <- "Type"
+names(facebook_data)[3] <- "Category"
+names(facebook_data)[4] <- "Post.Month"
+names(facebook_data)[5] <- "Post.Weekday"
+names(facebook_data)[6] <- "Post.Hour"
+names(facebook_data)[7] <- "Paid"
+names(facebook_data)[8] <- "Total.Reach" #usuarios que vieron el post
+names(facebook_data)[9] <- "Total.Impressions" #numero de veces que se vio tu post impresiones (mas de una por usuario)
+names(facebook_data)[10] <- "Engaged.Usuarios" #personas que interactuaron
+names(facebook_data)[11] <- "numero.personas.click.no.hist" #personas que interactuaron sin subir historia
+names(facebook_data)[12] <- "Total.clicks.en.post" #cada usuario puede hacer mas de un click
+names(facebook_data)[13] <- "Impressions.for.Users.Fans"#Impresiones.de.perosnas.que.siguen.tu.pagina
+names(facebook_data)[14] <- "Reach.by.Users.Fans"#usuarios que vieron el post y siguen la pag
+names(facebook_data)[15] <- "Users.Fans.and.Engagement" #usuarios que iguen la pagina e interactuan
+names(facebook_data)[16] <- "Comment"
+names(facebook_data)[17] <- "Like"
+names(facebook_data)[18] <- "Share"
+names(facebook_data)[19] <- "Total.Interactions" 
+```
+
+
+Tipo de post:
+
+```{r}
+library(wesanderson)
+library(RColorBrewer)
+library(cowplot)
+library(dplyr)
+
+g1 = ggplot(data = facebook_data, aes(x = Type, fill = Type)) + 
+  geom_bar()+
+  ggtitle("Tipo de publicación")+
+  xlab("Tipo")+
+  ylab("Frecuencia")+
+  scale_fill_brewer(palette = "Accent")
+
+g1
+
+```
+
+Variable Categoria
+
+```{r}
+p1 = ggplot(data = facebook_data, aes(x = Category, fill = Type)) + 
+  geom_bar(position=position_fill())+
+  labs( x = "Tipo", y = "Frecuencia")+
+  ggtitle("Tipo de publicación")+
+  scale_fill_brewer(palette = "Accent")
+
+p2 = ggplot(data = facebook_data, aes(x = Category, fill = Type)) + 
+  geom_bar()+
+  labs( x = "Tipo", y = "Frecuencia")+
+  ggtitle("Tipo de publicación")+
+  scale_fill_brewer(palette = "Accent")
+cowplot::plot_grid(p1,p2, labels = "AUTO")
+```
+
+Variable Pagado
+
+```{r}
+g2 = ggplot(data = facebook_data, aes(x = Paid, fill = Type)) + 
+  geom_bar(position=position_fill())+
+  labs( x = "Pago", y = "Proporción")+
+  ggtitle("Pago por Publicidad")+
+  scale_fill_brewer(palette = "Accent")
+
+g3 = ggplot(data = facebook_data, aes(x = Paid, fill = Type)) + 
+  geom_bar(position=position_stack())+
+  labs( x = "Pago", y = "Frecuencia")+
+  ggtitle("Pago por Publicidad")+
+  scale_fill_brewer(palette = "Accent")
+
+cowplot::plot_grid(g1,g2, labels = "AUTO")
+```
+
+Alcance total post
+
+```{r}
+g4 = ggplot(data = facebook_data, aes(x =Total.Reach,y = Type, fill = Type)) + 
+  geom_boxplot(outlier.colour = "skyblue", aes(fill = Type))+
+  labs( x = "Alcance", y = "Tipo de Post")+
+  ggtitle("Alcance de la publicación")+
+  scale_fill_brewer(palette = "Accent")
+g4
+```
+
+Impresiones totales
+
+```{r}
+aux = facebook_data$Total.Impressions
+new=aux[which(aux< 3*10^5)]
+new2 = c(new,mean(new),mean(new),mean(new),mean(new),mean(new),mean(new))
+
+aux2 = facebook_data$Type[1:length(new)]
+aux2 = c(aux2, "Photo", "Photo", "Photo", "Photo","Photo","Photo")
+
+g5 = ggplot(data = facebook_data, aes(x =new2, y  = aux2,fill = Type)) + 
+  geom_boxplot()+
+  labs( x = "Impresiones", y = "Tipo de Post")+
+  ggtitle("Impresiones del Post")+
+  scale_fill_brewer(palette = "Accent")
+g5
+```
+
+Interacciones de usuarios con y sin historias
+
+```{r}
+g6 = ggplot(data = facebook_data, aes(x =Engaged.Usuarios,y = Type, fill = Type)) + 
+  geom_boxplot()+
+  labs( x = "Interacciones", y = "Numero de interacciones")+
+  ggtitle("Interacciones del Post")+
+  scale_fill_brewer(palette = "Accent")
+
+g7 = ggplot(data = facebook_data, aes(x =numero.personas.click.no.hist, y = Type,fill = Type)) + 
+  geom_boxplot()+
+  labs( x = "Interacciones sin Subir Historia", y = "Numero de interacciones")+
+  ggtitle("Interacciones del Post sin Subir Historia")+
+  scale_fill_brewer(palette = "Accent")
+
+cowplot::plot_grid(g6,g7, labels = "AUTO")
+
+```
+
+Click totales en el post
+
+```{r}
+aux = facebook_data$Total.clicks.en.post
+new=aux[which(aux< 15000)]
+new2 = c(new,mean(new),mean(new))
+
+aux2 = facebook_data$Type[1:length(new)]
+aux2 = c(aux2, "Photo", "Photo")
+
+g8 = ggplot(data = facebook_data, aes(x =new2,y = aux2, fill = Type)) + 
+  geom_boxplot()+
+  labs( x = "Número de Clicks", y = "Tipo de Post")+
+  ggtitle("Número de Clicks en el Post")+
+  scale_fill_brewer(palette = "Accent")
+
+g8
+
+```
+
+Impresiones de personas que siguen la pagina
+
+```{r}
+aux = facebook_data$Impressions.for.Users.Fans
+new=aux[which(aux< 100000)]
+new2 = c(new,mean(new),mean(new),mean(new),mean(new),mean(new),mean(new),mean(new))
+
+aux2 = facebook_data$Type[1:length(new)]
+aux2 = c(aux2, "Photo", "Photo", "Photo", "Photo","Photo","Photo","Photo")
+
+g9 = ggplot(data = facebook_data, aes(x =new2,y = aux2, fill = Type)) + 
+  geom_boxplot()+
+  labs( x = "Número de Clicks", y = "Tipo de Post")+
+  ggtitle("Número de Clicks en el Post")+
+  scale_fill_brewer(palette = "Accent")
+g9
+```
+
+Alcance d epoersonas qeu siguen tu pagina
+
+```{r}
+
+g10 = ggplot(data = facebook_data, aes(x =Reach.by.Users.Fans,y = Type , fill = Type)) + 
+  geom_boxplot()+
+  labs( x = "Alcance de Personas que Siguen tu Página", y = "Tipo de Post")+
+  ggtitle("Número de Personas")+
+  scale_fill_brewer(palette = "Accent")
+g10
+```
+
+Interacciones de personas que sigune la pagina
+
+```{r}
+g11 = ggplot(data = facebook_data, aes(x =Users.Fans.and.Engagement, y = Type, fill = Type)) + 
+  geom_boxplot()+
+  labs( x = "Interacciones de Personas que Siguen tu Página", y = "Tipo de Post")+
+  ggtitle("Número de Interacciones con el Post")+
+  scale_fill_brewer(palette = "Accent")
+g11
+```
+
+Commentarios
+
+```{r}
+com1 = facebook_data$Comment
+com1=com1[which(com1< 120)]
+com2 = c(com1,mean(com1),mean(com1),mean(com1))
+
+com3 = facebook_data$Type[1:length(com1)]
+com4 = c(com3, "Photo","Photo","Photo")
+
+
+
+g12 = ggplot(data = facebook_data, aes(x =com2, y = com4, fill = Type)) + 
+  geom_boxplot()+
+  labs( x = "Interacciones de Personas que Siguen tu Página", y = "Tipo de Post")+
+  ggtitle("Número de Interacciones con el Post")+
+  scale_fill_brewer(palette = "Accent")
+g12
+```
+
+Likes
+
+```{r}
+com1 = facebook_data$Like
+com1=com1[which(com1< 3000)]
+com2 = c(com1,mean(com1),mean(com1))
+
+com3 = facebook_data$Type[1:length(com1)]
+com4 = c(com3, "Photo","Photo")
+
+g13 = ggplot(data = facebook_data, aes(x =com2, y = com4, fill = Type)) + 
+  geom_boxplot()+
+  labs( x = "Número de Likes de la Página", y = "Tipo de Post")+
+  ggtitle("Número de Likes")+
+  scale_fill_brewer(palette = "Accent")
+g13
+```
+
+Shares
+
+```{r}
+com1 = facebook_data$Share
+com1=com1[which(com1< 400)]
+com2 = c(com1,mean(com1),mean(com1),mean(com1),mean(com1),mean(com1))
+
+com3 = facebook_data$Type[1:length(com1)]
+com4 = c(com3, "Photo","Photo","Photo","Photo","Photo")
+
+g14 = ggplot(data = facebook_data, aes(x =com2, y = com4, fill = Type)) + 
+  geom_boxplot()+
+  labs( x = "Número de Likes de la Página", y = "Tipo de Post")+
+  ggtitle("Número de Likes")+
+  scale_fill_brewer(palette = "Accent")
+g14
+```
+
+Total anteriores
+
+```{r}
+com1 = facebook_data$Total.Interactions
+com1=com1[which(com1< 4000)]
+com2 = c(com1,mean(com1))
+
+com3 = facebook_data$Type[1:length(com1)]
+com4 = c(com3, "Photo")
+
+g15 = ggplot(data = facebook_data, aes(x =com2, y = com4, fill = Type)) + 
+  geom_boxplot()+
+  labs( x = "Número de Likes, Comentarios y Shares", y = "Tipo de Post")+
+  ggtitle("Número de Interacciones")+
+  scale_fill_brewer(palette = "Accent")
+g15
+
+cowplot::plot_grid(g4,g5, labels = "AUTO")
+cowplot::plot_grid(g6,g7, labels = "AUTO")
+cowplot::plot_grid(g8,g9, labels = "AUTO")
+cowplot::plot_grid(g10,g11, labels = "AUTO")
+cowplot::plot_grid(g12,g13, labels = "AUTO")
+cowplot::plot_grid(g14,g15, labels = "AUTO")
+
+```
+
+Por tipo
+
+```{r}
+Indice_foto = c()
+Indice_video = c()
+Indice_estado = c()
+Indice_link = c()
+for (i in 1:nrow(facebook_data)){
+  if (facebook_data[i,"Type"] == "Photo"){
+    Indice_foto = c(Indice_foto, i)
+  }
+  if (facebook_data[i,"Type"] == "Status"){
+    Indice_estado = c(Indice_estado, i)
+  }
+  if (facebook_data[i,"Type"] == "Link"){
+    Indice_link = c(Indice_link, i)
+  }
+  if (facebook_data[i,"Type"] == "Video"){
+    Indice_video = c(Indice_video, i)
+  }
+}
+```
+
+Tipo Estado
+```{r}
+estados_datos = facebook_data[Indice_estado,]
+
+g16 = ggplot(data = estados_datos, aes(x = estados_datos$Total.Interactions , fill = Type)) + 
+  geom_boxplot()+
+  scale_fill_brewer(palette = "Accent")
+g16
+estados_mediana_alcance = median(estados_datos$Total.Reach)
+estados_media_alcance = mean(estados_datos$Total.Reach)
+estados_sd_alcance = sd(estados_datos$Total.Reach)
+estados_min_alcance = min(estados_datos$Total.Reach)
+estados_max_alcance = max(estados_datos$Total.Reach)
+resumen_estados_alcance = round(c(estados_mediana_alcance,estados_media_alcance,estados_sd_alcance,estados_min_alcance,estados_max_alcance))
+
+estados_mediana_cls = median(estados_datos$Total.Interactions)
+estados_media_cls = mean(estados_datos$Total.Interactions)
+estados_sd_cls = sd(estados_datos$Total.Interactions)
+estados_min_cls = min(estados_datos$Total.Interactions)
+estados_max_cls = max(estados_datos$Total.Interactions)
+resumen_estados_cls = round(c(estados_mediana_cls,estados_media_cls,estados_sd_cls,estados_min_cls,estados_max_cls))
+
+estados_mediana_interacciones = median(estados_datos$Engaged.Usuarios)
+estados_media_interacciones = mean(estados_datos$Engaged.Usuarios)
+estados_sd_interacciones = sd(estados_datos$Engaged.Usuarios)
+estados_min_interacciones = min(estados_datos$Engaged.Usuarios)
+estados_max_interacciones = max(estados_datos$Engaged.Usuarios)
+resumen_estados_interacciones = round(c(estados_mediana_interacciones,estados_media_interacciones,estados_sd_interacciones,estados_min_interacciones,estados_max_interacciones))
+
+```
+
+Tipo Foto
+
+```{r}
+fotos_datos = facebook_data[Indice_foto,]
+
+g17 = ggplot(data = fotos_datos, aes(x = fotos_datos$Total.Interactions , fill = Type)) + 
+  geom_boxplot()+
+  scale_fill_brewer(palette = "Accent")
+g17
+
+fotos_mediana_alcance = median(fotos_datos$Total.Reach)
+fotos_media_alcance = mean(fotos_datos$Total.Reach)
+fotos_sd_alcance = sd(fotos_datos$Total.Reach)
+fotos_min_alcance = min(fotos_datos$Total.Reach)
+fotos_max_alcance = max(fotos_datos$Total.Reach)
+resumen_fotos_alcance = round(c(fotos_mediana_alcance,fotos_media_alcance,fotos_sd_alcance,fotos_min_alcance,fotos_max_alcance))
+
+fotos_mediana_cls = median(fotos_datos$Total.Interactions)
+fotos_media_cls = mean(fotos_datos$Total.Interactions)
+fotos_sd_cls = sd(fotos_datos$Total.Interactions)
+fotos_min_cls = min(fotos_datos$Total.Interactions)
+fotos_max_cls = max(fotos_datos$Total.Interactions)
+resumen_fotos_cls = round(c(fotos_mediana_cls,fotos_media_cls,fotos_sd_cls,fotos_min_cls,fotos_max_cls))
+
+fotos_mediana_interacciones = median(fotos_datos$Engaged.Usuarios)
+fotos_media_interacciones = mean(fotos_datos$Engaged.Usuarios)
+fotos_sd_interacciones = sd(fotos_datos$Engaged.Usuarios)
+fotos_min_interacciones = min(fotos_datos$Engaged.Usuarios)
+fotos_max_interacciones = max(fotos_datos$Engaged.Usuarios)
+resumen_fotos_interacciones = round(c(fotos_mediana_interacciones,fotos_media_interacciones,fotos_sd_interacciones,fotos_min_interacciones,fotos_max_interacciones))
+```
+
+Tipo Video
+
+```{r}
+video_datos = facebook_data[Indice_video,]
+
+g18 = ggplot(data = video_datos, aes(x = video_datos$Total.Interactions , fill = Type)) + 
+  geom_boxplot()+
+  scale_fill_brewer(palette = "Accent")
+g18
+
+video_mediana_alcance = median(video_datos$Total.Reach)
+video_media_alcance = mean(video_datos$Total.Reach)
+video_sd_alcance = sd(video_datos$Total.Reach)
+video_min_alcance = min(video_datos$Total.Reach)
+video_max_alcance = max(video_datos$Total.Reach)
+resumen_video_alcance = round(c(video_mediana_alcance,video_media_alcance,video_sd_alcance,video_min_alcance,video_max_alcance))
+
+
+video_mediana_cls = median(video_datos$Total.Interactions)
+video_media_cls = mean(video_datos$Total.Interactions)
+video_sd_cls = sd(video_datos$Total.Interactions)
+video_min_cls = min(video_datos$Total.Interactions)
+video_max_cls = max(video_datos$Total.Interactions)
+resumen_video_cls = round(c(video_mediana_cls,video_media_cls,video_sd_cls,video_min_cls,video_max_cls))
+
+video_mediana_interacciones = median(video_datos$Engaged.Usuarios)
+video_media_interacciones = mean(video_datos$Engaged.Usuarios)
+video_sd_interacciones = sd(video_datos$Engaged.Usuarios)
+video_min_interacciones = min(video_datos$Engaged.Usuarios)
+video_max_interacciones = max(video_datos$Engaged.Usuarios)
+resumen_video_interacciones = round(c(video_mediana_interacciones,video_media_interacciones,video_sd_interacciones,video_min_interacciones,video_max_interacciones))
+
+```
+
+Tipo Link
+
+```{r}
+link_datos = facebook_data[Indice_link,]
+
+g19 = ggplot(data = link_datos, aes(x = link_datos$Total.Interactions , fill = Type)) + 
+  geom_boxplot()+
+  scale_fill_brewer(palette = "Accent")
+g19
+link_mediana_alcance = median(link_datos$Total.Reach)
+link_media_alcance = mean(link_datos$Total.Reach)
+link_sd_alcance = sd(link_datos$Total.Reach)
+link_min_alcance = min(link_datos$Total.Reach)
+link_max_alcance = max(link_datos$Total.Reach)
+resumen_link_alcance = round(c(link_mediana_alcance,link_media_alcance,link_sd_alcance,link_min_alcance,link_max_alcance))
+
+link_mediana_cls = median(link_datos$Total.Interactions)
+link_media_cls = mean(link_datos$Total.Interactions)
+link_sd_cls = sd(link_datos$Total.Interactions)
+link_min_cls = min(link_datos$Total.Interactions)
+link_max_cls = max(link_datos$Total.Interactions)
+resumen_link_cls = round(c(link_mediana_cls,link_media_cls,link_sd_cls,link_min_cls,link_max_cls))
+
+link_mediana_interacciones = median(link_datos$Engaged.Usuarios)
+link_media_interacciones = mean(link_datos$Engaged.Usuarios)
+link_sd_interacciones = sd(link_datos$Engaged.Usuarios)
+link_min_interacciones = min(link_datos$Engaged.Usuarios)
+link_max_interacciones = max(link_datos$Engaged.Usuarios)
+resumen_link_interacciones = round(c(link_mediana_interacciones,link_media_interacciones,link_sd_interacciones,link_min_interacciones,link_max_interacciones))
+```
+
+```{r}
+resumen_link_alcance
+resumen_estados_alcance
+resumen_fotos_alcance
+resumen_video_alcance
+
+resumen_link_interacciones
+resumen_estados_interacciones
+resumen_fotos_interacciones
+resumen_video_interacciones
+
+resumen_link_cls
+resumen_estados_cls
+resumen_fotos_cls
+resumen_video_cls
+```
+
+```{r}
+datos_importantes= facebook_data
+datos_importantes = select(datos_importantes,"Total.Reach" , "Total.Impressions" , "Engaged.Usuarios",
+                         "numero.personas.click.no.hist", "Comment",
+                         "Like", "Share" )
+mo_lineal_multipe = lm(Total.Reach ~ Total.Impressions + Engaged.Usuarios + 
+                         numero.personas.click.no.hist+
+                         Like+ Share + Comment,data = datos_importantes)
+summary(mo_lineal_multipe)
+
+mo_lineal_multipe_2 = lm(Total.Reach ~ Engaged.Usuarios + Total.Impressions + numero.personas.click.no.hist + Like, data = datos_importantes)
+summary(mo_lineal_multipe_2)
+```
+
+```{r}
+residuos_estandar = rstandard(mo_lineal_multipe_2)
+valores_ajustados = fitted(mo_lineal_multipe_2)
+plot(valores_ajustados, residuos_estandar)
+
+qqnorm(residuos_estandar)
+qqline(residuos_estandar)
+
+qqnorm(facebook_data$Total.Reach)
+qqline(facebook_data$Total.Reach)
+
+library(Johnson)
+newxd = RE.Johnson(facebook_data$Total.Reach)$transformed
+
+ks.test(newxd, pnorm, mean(newxd), sd(newxd))
+qqnorm(newxd)
+qqline(newxd)
+
+
+```
+
+```{r}
+mo_lineal_multipe = lm(newxd ~ Total.Impressions + Engaged.Usuarios + 
+                         numero.personas.click.no.hist+
+                         Like+ Share + Comment ,data = datos_importantes)
+summary(mo_lineal_multipe)
+
+mo_lineal_multipe = lm(newxd ~ Total.Impressions + Engaged.Usuarios + 
+                         Like+ Share + Comment ,data = datos_importantes)
+mo_lineal_multipe = lm(newxd ~  Engaged.Usuarios + 
+                         Like+ Share  ,data = datos_importantes)
+
+residuos_estandar = rstandard(mo_lineal_multipe)
+valores_ajustados = fitted(mo_lineal_multipe)
+plot(valores_ajustados, residuos_estandar)
+
+qqnorm(residuos_estandar)
+qqline(residuos_estandar)
+ks.test(residuos_estandar, pnorm, mean(residuos_estandar), sd(residuos_estandar))
+
+step(  lm(newxd~., data = datos_importantes), direction = "both"   )
+summary(lm(newxd~Share + Total.Impressions + Engaged.Usuarios + Comment + numero.personas.click.no.hist
+           + Like, data = datos_importantes))
+mod_f = lm(newxd~  Total.Impressions + Comment + Engaged.Usuarios + Like,data = datos_importantes)
+summary(lm(newxd~  Total.Impressions + Comment + Engaged.Usuarios + Like, data = datos_importantes))
+
+residuos_estandar = rstandard(mod_f)
+valores_ajustados = fitted(mod_f)
+plot(valores_ajustados, residuos_estandar)
+
+qqnorm(residuos_estandar)
+qqline(residuos_estandar)
+ks.test(residuos_estandar, pnorm, mean(residuos_estandar), sd(residuos_estandar))
+library(lmtest)
+bptest(mod_f)
+
+plot(residuos_estandar, type ="l")
+
+studentized_residual <- rstudent(mod_f)
+aux = c(matrix(which(abs(studentized_residual) > 3), nrow= 1, ncol = 8))
+datos_nuevos = c()
+for(i in 1:nrow(facebook_data)){
+  if (not(i  %in% c(which(abs(studentized_residual)> 3)))){
+    message("hola")
+  }else{
+    datos_nuevos = facebook_data[i,]
+  }
+}
+
+```
+
+```{r}
+cor(facebook_data$Total.Reach, as.numeric(facebook_data$Total.Interactions))
+cor(facebook_data$Total.Reach, as.numeric(facebook_data$Comment))
+cor(facebook_data$Total.Reach, as.numeric(facebook_data$Share))
+cor(facebook_data$Total.Reach, as.numeric(facebook_data$Like))
+
+
+
+com1 = facebook_data$Reach.by.Users.Fans
+com1=com1[which(com1< 20000)]
+com2 = c(com1,rep(mean(com1),33))
+
+com11 = facebook_data$Engaged.Usuarios
+com11=com11[which(com11< 4000)]
+com22 = c(com11,rep(mean(com11),7))
+
+
+summary(lm(newxd ~  com2 + com22 , data = facebook_data))
+plot(fitted(lm(newxd ~ Reach.by.Users.Fans + Engaged.Usuarios, data = facebook_data)),rstandard(lm(newxd ~ Reach.by.Users.Fans+ Engaged.Usuarios, data = facebook_data)), xlim = c(0,1), ylim= c(-2,2))
+
+
+summary(lm(newxd ~ Total.Interactions, data = facebook_data))
+```
+
+
+
+## Conclusión
