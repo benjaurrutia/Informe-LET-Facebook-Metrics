@@ -1,0 +1,29 @@
+---
+title: "Libro de codigos"
+author: "Benjamín Urrutia"
+date: "13-11-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+| Variable | Tipo de variable | Descripción | 
+| :----------: | :---------: | :---------: | 
+| Type                          |  Categórica | Tipo de publicación: Video, Foto, Estado o Link
+| Page.Total.Likes              |  Númerica   | Número de likes totales de la página
+| Category                      |  Categórica | Categoria del post: Action, Product e Inspiration
+| Total.Reach                   |  Númerica   | Alcancé total del Post
+| Total.Impression              |  Númerica   | Número de veces que se vío tu post (una vez por usuario)
+| Engaged.Usuararios            |  Númerica   | Número de interacciones con tu post
+| numero.personas.click.no.hist |  Númerica   | Número de interacciones con tu post sin compartir a través de historias
+| Total.clicks.en.post          |  Númerica   | Número total de clicks (en cualquier lugar) en tu post
+| Impressions.for.Users.Fans    |  Númerica   | Número de veces que seguidores de tu página vieron tu post
+| Reach.by.Users.Fans           |  Númerica   | Alcancé total del Post de personas que siguen tu página
+| Comment                       |  Númerica   | Número de comentarios
+| Like                          |  Númerica   | Número de likes
+| Share                         |  Númerica   | Número de veces que tu post fue compartido
+| Total.Interactions            |  Númerica   | Número de interacciones totales
+ 
+

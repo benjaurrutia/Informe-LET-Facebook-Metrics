@@ -1,4 +1,8 @@
-facebook_data=import("dataset_Facebook.csv")
+library("readr")
+facebook_data=read_csv2("datos_sin_procesar/dataset_Facebook.csv")
+
+
+#modificamos el nombre de las variables para facilitar la comprención
 
 names(facebook_data)[1] <- "Page.Total.Likes"
 names(facebook_data)[2] <- "Type"
@@ -22,7 +26,7 @@ names(facebook_data)[19] <- "Total.Interactions"
 
 
 
-
+write.csv2(facebook_data, file="Datos_listos.csv")
 
 
 

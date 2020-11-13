@@ -40,28 +40,30 @@ library(wesanderson)
 library(RColorBrewer)
 library(cowplot)
 library(dplyr)
+library(readr)
+setwd("C:/Users/benja/Desktop/Benjamin Urrutia/LET/Informe-LET-Facebook-Metrics/Infome LET/InformeF")
+#facebook_data=import("dataset_Facebook.csv")
+facebook_data = read_csv2("datos_con_procesar/Datos_listos.csv")
 
-facebook_data=import("dataset_Facebook.csv")
-
-names(facebook_data)[1] <- "Page.Total.Likes"
-names(facebook_data)[2] <- "Type"
-names(facebook_data)[3] <- "Category"
-names(facebook_data)[4] <- "Post.Month"
-names(facebook_data)[5] <- "Post.Weekday"
-names(facebook_data)[6] <- "Post.Hour"
-names(facebook_data)[7] <- "Paid"
-names(facebook_data)[8] <- "Total.Reach" #usuarios que vieron el post
-names(facebook_data)[9] <- "Total.Impressions" #numero de veces que se vio tu post impresiones (mas de una por usuario)
-names(facebook_data)[10] <- "Engaged.Usuarios" #personas que interactuaron
-names(facebook_data)[11] <- "numero.personas.click.no.hist" #personas que interactuaron sin subir historia
-names(facebook_data)[12] <- "Total.clicks.en.post" #cada usuario puede hacer mas de un click
-names(facebook_data)[13] <- "Impressions.for.Users.Fans"#Impresiones.de.perosnas.que.siguen.tu.pagina
-names(facebook_data)[14] <- "Reach.by.Users.Fans"#usuarios que vieron el post y siguen la pag
-names(facebook_data)[15] <- "Users.Fans.and.Engagement" #usuarios que iguen la pagina e interactuan
-names(facebook_data)[16] <- "Comment"
-names(facebook_data)[17] <- "Like"
-names(facebook_data)[18] <- "Share"
-names(facebook_data)[19] <- "Total.Interactions" 
+#names(facebook_data)[1] <- "Page.Total.Likes"
+#names(facebook_data)[2] <- "Type"
+#names(facebook_data)[3] <- "Category"
+#names(facebook_data)[4] <- "Post.Month"
+#names(facebook_data)[5] <- "Post.Weekday"
+#names(facebook_data)[6] <- "Post.Hour"
+#names(facebook_data)[7] <- "Paid"
+#names(facebook_data)[8] <- "Total.Reach" #usuarios que vieron el post
+#names(facebook_data)[9] <- "Total.Impressions" #numero de veces que se vio tu post #impresiones (mas de una por usuario)
+#names(facebook_data)[10] <- "Engaged.Usuarios" #personas que interactuaron
+#names(facebook_data)[11] <- "numero.personas.click.no.hist" #personas que interactuaron #sin subir historia
+#names(facebook_data)[12] <- "Total.clicks.en.post" #cada usuario puede hacer mas de un #click
+#names(facebook_data)[13] <- #"Impressions.for.Users.Fans"#Impresiones.de.perosnas.que.siguen.tu.pagina
+#names(facebook_data)[14] <- "Reach.by.Users.Fans"#usuarios que vieron el post y siguen #la pag
+#names(facebook_data)[15] <- "Users.Fans.and.Engagement" #usuarios que iguen la pagina e #interactuan
+#names(facebook_data)[16] <- "Comment"
+#names(facebook_data)[17] <- "Like"
+#names(facebook_data)[18] <- "Share"
+#names(facebook_data)[19] <- "Total.Interactions" 
 
 Indice_foto = c()
 Indice_video = c()
@@ -108,7 +110,7 @@ g1 = ggplot(data = facebook_data, aes(x = Type, fill = Type)) +
 
 g1
 
-ggsave(here::here("figuras", "Distintos Tipos de Post.png"))
+
 ```
 
 Como podemos ver en el gráfico, el número de publicaciones de fotos (color morado) es mucho más alto en comparación al resto de post. 
@@ -205,7 +207,7 @@ for (i in 1:nrow(link_datos)){
     cat3_link = c(cat3_link,i)
   }
 }
-ggsave(here::here("figuras", "Categorias.png"))
+
 
 ```
 
@@ -239,7 +241,7 @@ g4 = ggplot(data = facebook_data, aes(x =Total.Reach,y = Type, fill = Type)) +
   ggtitle("Alcance de la publicación")+
   scale_fill_brewer(palette = "Accent")
 g4
-ggsave(here::here("figuras", "Alcance.png"))
+
 ```
 
 Como podemos ver la categoría `Video` es la que mayor mediana tiene. No obstante hay que tener en cuenta que hay solo `r nrow(video_datos)` datos de este post en nuestra base de datos. 
@@ -328,7 +330,7 @@ g5 = ggplot(data = facebook_data, aes(x =new2, y  = aux2,fill = Type)) +
   ggtitle("Impresiones del Post")+
   scale_fill_brewer(palette = "Accent")
 g5
-ggsave(here::here("figuras", "Impresiones.png"))
+
 ```
 
 
