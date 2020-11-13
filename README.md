@@ -4,14 +4,26 @@
 
 ### Datos sin procesar 
 
-esta carpeta contiene la base de datos 
+Esta carpeta contiene la base de datos 
 
 [link base de datos](https://archive.ics.uci.edu/ml/datasets/Facebook+metrics)
 
-### Datos sin procesar
+### Datos con procesar
 
-esta carpeta contiene los archivos  R: Borrador, carpetas e Informe
+Esta carpeta contiene los datos listos para su análisis
 
 ### Figuras
 
-esta carpeta contiene los gráficos
+Esta carpeta contiene los gráficos
+
+### Borrador
+
+Esta carpeta contiene un borrador para un primer vistazo a los datos
+
+### productos
+
+Esta carpeta contiene el producto final en formato htlm
+
+### codigo
+
+Esta carpeta contiene los archivos códigos en R
