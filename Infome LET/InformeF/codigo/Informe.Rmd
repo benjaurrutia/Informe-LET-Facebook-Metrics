@@ -113,11 +113,10 @@ g1
 
 ```
 
-Como podemos ver en el gráfico, el número de publicaciones de fotos (color morado) es mucho más alto en comparación al resto de post. 
+Como podemos ver en el gráfico, el número de publicaciones de fotos es mucho más alto en comparación al resto de post. 
 
-Es por esto que analizar, por ejemplo, el total de likes de cada publicación no tiene mucho sentido ya que, al haber más fotos, el total de likes va a ser mayor que el resto. No obstante, esto no significa que una foto tenga más likes que un video.
 
-Por esta razón, nuestro análisis se va a enfocar en cada tipo de post y como se comporta este.
+Podemos notar la diferencia en la siguiente tabla
 
 | Tipo de Post | Cantidad de publicaciones |          Porcentaje del Total               |            
 | :------------: | :-------------------------: | :-------------------------------------------: |
@@ -126,6 +125,11 @@ Por esta razón, nuestro análisis se va a enfocar en cada tipo de post y como s
 | Video  |  `r  nrow(video_datos) `        | `r nrow(video_datos)/nrow(facebook_data)*100 `%  |
 | Estado |  `r  nrow(estados_datos) `      | `r nrow(estados_datos)/nrow(facebook_data)*100 `%|
 
+Como vemos, las fotos corresponden a un 85.2% de las publicaciones totales, mientras que el resto de publicaciones solo abarcan un 14.8%.  
+
+Es por esto que analizar, por ejemplo, el total de likes de cada publicación no tiene mucho sentido ya que, al haber más fotos, el total de likes va a ser mayor que el resto. No obstante, esto no significa que una foto tenga más likes que un video.
+
+Por esta razón, nuestro análisis se va a enfocar en cada tipo de post y como se comporta este.
 
 ## Categoría de la publicación
 
@@ -139,26 +143,28 @@ p1 = ggplot(data = facebook_data, aes(x = Category, fill = Type)) +
   geom_bar(position=position_fill())+
   labs( x = "Tipo", y = "Proporción")+
   ggtitle("Tipo de publicación")+
-  scale_fill_brewer(palette = "Accent")
+  scale_fill_brewer(palette = "Accent")+
+  theme_minimal()
 
 p2 = ggplot(data = facebook_data, aes(x = Category, fill = Type)) + 
   geom_bar()+
-  labs( x = "Tipo", y = "Frecuencia")+
-  ggtitle("Tipo de publicación")+
-  scale_fill_brewer(palette = "Accent")
+  labs( x = "Categoría", y = "Frecuencia")+
+  ggtitle("Categoría de la publicación")+
+  scale_fill_brewer(palette = "Accent") +
+  theme_minimal()
 cowplot::plot_grid(p2,p1, labels = "AUTO")
 
 cat1_estados = c()
 cat2_estados = c()
 cat3_estados = c()
 for (i in 1:nrow(estados_datos)){
-  if(estados_datos[i,3] == 1){
+  if(estados_datos[i,4] == 1){
     cat1_estados = c(cat1_estados,i)
   }
-  if(estados_datos[i,3] == 2){
+  if(estados_datos[i,4] == 2){
     cat2_estados = c(cat2_estados,i)
   }
-  if(estados_datos[i,3] == 3){
+  if(estados_datos[i,4] == 3){
     cat3_estados = c(cat3_estados,i)
   }
 }
@@ -167,13 +173,13 @@ cat1_video = c()
 cat2_video = c()
 cat3_video = c()
 for (i in 1:nrow(video_datos)){
-  if(video_datos[i,3] == 1){
+  if(video_datos[i,4] == 1){
     cat1_video = c(cat1_video,i)
   }
-  if(video_datos[i,3] == 2){
+  if(video_datos[i,4] == 2){
     cat2_video = c(cat2_video,i)
   }
-  if(video_datos[i,3] == 3){
+  if(video_datos[i,4] == 3){
     cat3_video = c(cat3_video,i)
   }
 }
@@ -182,13 +188,13 @@ cat1_fotos = c()
 cat2_fotos = c()
 cat3_fotos = c()
 for (i in 1:nrow(fotos_datos)){
-  if(fotos_datos[i,3] == 1){
+  if(fotos_datos[i,4] == 1){
     cat1_fotos = c(cat1_fotos,i)
   }
-  if(fotos_datos[i,3] == 2){
+  if(fotos_datos[i,4] == 2){
     cat2_fotos = c(cat2_fotos,i)
   }
-  if(fotos_datos[i,3] == 3){
+  if(fotos_datos[i,4] == 3){
     cat3_fotos = c(cat3_fotos,i)
   }
 }
@@ -197,13 +203,13 @@ cat1_link = c()
 cat2_link = c()
 cat3_link = c()
 for (i in 1:nrow(link_datos)){
-  if(link_datos[i,3] == 1){
+  if(link_datos[i,4] == 1){
     cat1_link = c(cat1_link,i)
   }
-  if(link_datos[i,3] == 2){
+  if(link_datos[i,4] == 2){
     cat2_link = c(cat2_link,i)
   }
-  if(link_datos[i,3] == 3){
+  if(link_datos[i,4] == 3){
     cat3_link = c(cat3_link,i)
   }
 }
@@ -216,6 +222,7 @@ Como podemos ver en el primer gráfico, hay una mayor cantidad de post dentro de
 En el segundo, vemos de manera gráfica la proporción de cada post dentro de cada categoría.
 
 Veamos numericamente como se comporta cada tipo publicación
+
 
 | Tipo de Post | Categoria 1 | Categoria 2 | Categoria 3 |
 | :----------: | :---------: | :---------: | :---------: |
@@ -234,23 +241,34 @@ La variable `Alcance Total` se refiere a la cantidad de usuarios únicos que vie
 
 Para analizar como se comportan los post, vamos a ver un gráfico Boxplot. Para aprender a interpretarlo podemos ver el siguiente [link](https://www.pgconocimiento.com/diagrama-boxplot/#:~:text=Asimetr%C3%ADa%20positiva%20o%20segada%20a,la%20inferior%20a%20la%20mediana.).
 
+
+
 ```{r}
 g4 = ggplot(data = facebook_data, aes(x =Total.Reach,y = Type, fill = Type)) + 
-  geom_boxplot(outlier.colour = "skyblue", aes(fill = Type))+
+  geom_boxplot(#outlier.colour = "skyblue", 
+               aes(fill = Type),
+               alpha=1,
+               notchwidth = 0.8,
+               outlier.colour="red",
+               outlier.fill="red",
+               outlier.size=1)+
   labs( x = "Alcance", y = "Tipo de Post")+
   ggtitle("Alcance de la publicación")+
   scale_fill_brewer(palette = "Accent")
-g4
-
+g4 
 ```
 
-Como podemos ver la categoría `Video` es la que mayor mediana tiene. No obstante hay que tener en cuenta que hay solo `r nrow(video_datos)` datos de este post en nuestra base de datos. 
+El gráfico BoxPlot sirve para ver como es la **dispersión de los datos**. Por ejemplo, tomemos el boxplot de los videos. La caja amarilla contiene el 50% de los datos. El **límite inferior** de esta corresponde al primer cuartil (**20% de los datos**) y el **límite superior** el tercer cuartil (**75% de los datos**). La linea del medio es la **mediana** (50% de los datos) y las lineas que salen de la caja corresponde a los datos que superan el primer o tercer cuartil. 
 
-Sobre la categoría `Status` o Estado, vemos que tiene una menor mediana en comparación a los videos pero levemente mayor a la de los otros tipos de post. Además presenta un valor extremo por la parte superior.
+Además, los puntos que aparecen en azul corresponden a **outliers** (datos que están bastante alejados del resto)
 
-Sobre la categoria `link` vemos que, a pesar de tener una mediana menor que los estados, vemos que tiene un alcance máximo más alto que el de los estados.
+Como podemos ver la categoría `Video` es la que **mayor mediana** tiene. No obstante hay que tener en cuenta que hay solo `r nrow(video_datos)` datos de este post en nuestra base de datos. 
 
-Por último, sobre la variable `Photo` o Foto, si bien es la que menor mediana tiene, es la que más datos presenta. Además, podemos ver que tiene muchos valores extremos o outliers. Podemos ver que la mediana está cercana al límite inferior del cajón, lo que quiere decir que la mitad de los datos se encuentran bajo ese valor, con un alcance bastante pequeño, mientras que la otra mitad se encuentra sobre ese valor, con un alcance bastante mayor.
+Sobre la categoría `Status` o Estado, vemos que tiene una **menor mediana** en comparación a los **videos** pero levemente **mayor** a la de los **otros tipos de post**. Además presenta un valor extremo por la parte superior.
+
+Sobre la categoria `link` vemos que, a pesar de tener una **mediana menor que los estados**, vemos que tiene un **alcance máximo más alto** que el de estos.
+
+Por último, sobre la variable `Photo` o Foto, si bien es la que **menor mediana** tiene, es la que más datos presenta. Además, podemos ver que tiene **muchos valores extremos o outliers**. Podemos ver que la mediana está cercana al límite inferior del cajón, lo que quiere decir que la mitad de los datos se encuentran bajo ese valor, con un alcance bastante pequeño, mientras que la otra mitad se encuentra sobre ese valor, con un alcance bastante mayor.
 
 Ahora veamos númericamente.  
 
@@ -304,15 +322,15 @@ resumen_video_alcance = round(c(video_mediana_alcance,video_media_alcance,video_
 | Estado       |  `r  format(resumen_estados_alcance[1], scientific = F) `| `r  format(resumen_estados_alcance[2], scientific = F) ` | `r  resumen_estados_alcance[3] `| `r  resumen_estados_alcance[4] `|`r  format(resumen_estados_alcance[5], scientific = F) `|
 
 
-Podemos ver en la tabla anterior que los Videos tienen mayor mediana y media que los demás tipos de post. No obstante, al ser pocos datos, tambien tienen una gran dispersión. 
+Podemos ver en la tabla anterior que **los Videos tienen mayor mediana y media** que los demás tipos de post. No obstante, al ser pocos datos, tambien tienen una gran dispersión. 
 
-Además, vemos que el máximo alcance de las Fotos es mayor que el de cualquier otro tipo de post. No obstante, tiene una mediana bastante pequeña, siendo la menor de las categorías y, además, vemos que la media tambien es de las más bajas junto con los Estados.
+Además, vemos que el **máximo alcance de las Fotos** es mayor que el de cualquier otro tipo de post. No obstante, tiene una mediana bastante pequeña, siendo la menor de las categorías y, además, vemos que la media tambien es de las más bajas junto con los Estados.
 
-Por lo que, en general, los Videos suelen tener un mayor alcance que los demás post. Sin embargo, hay que tener en cuenta que hay pocos datos en esta categoria. Cabe destacar que los Estados tienen una media y  mediana bastante parecida, por lo que su dispersión es poca, teniendo una desviación bastante pequeña. 
+Por lo que, en general, los Videos suelen tener un mayor alcance que los demás post. Sin embargo, hay que tener en cuenta que hay pocos datos en esta categoria. Cabe destacar que los **Estados tienen una media y  mediana bastante parecida**, por lo que su dispersión es poca, teniendo una desviación bastante pequeña. 
 
 ## Impresiones Totales
 
-Esta variable se refiere a la cantidad de veces que se ve tu post. A diferencia de la variable anterior, en este caso, si un usuario ve más de una vez tu post, se contabilizan todas las veces que las haya visto, es decir, un único usuario puede generar más de una impresión.
+Esta variable se refiere a la **cantidad de veces que se ve tu post**. A diferencia de la variable anterior, en este caso, si un usuario ve más de una vez tu post, se contabilizan todas las veces que las haya visto, es decir, **un único usuario puede generar más de una impresión**.
 
 Veamos gráficamente como se comporta.
 
@@ -325,35 +343,195 @@ aux2 = facebook_data$Type[1:length(new)]
 aux2 = c(aux2, "Photo", "Photo", "Photo", "Photo","Photo","Photo")
 
 g5 = ggplot(data = facebook_data, aes(x =new2, y  = aux2,fill = Type)) + 
-  geom_boxplot(outlier.colour="skyblue")+
+  geom_boxplot(outlier.colour="red", outlier.size = 1)+
   labs( x = "Impresiones", y = "Tipo de Post")+
   ggtitle("Impresiones del Post")+
   scale_fill_brewer(palette = "Accent")
-g5
+g5 
+
+
+```
+
+En la gráfica anterior podemos ver que **los videos en general tienen mayor numero de impresiones**, seguido de los estados y las fotos. Nuevamente **las fotos tienen una gran cantidad de outliers** y su **mediana es menor** que la de las otras dos categorias. 
+
+Sobre los link, vemos que tienen **menor mediana** que las otras categorías.
+
+Veamos en una tabla como se comportan.
+
+```{r}
+fotos_mediana_impresiones = median(fotos_datos$Total.Impressions)
+fotos_media_impresiones = mean(fotos_datos$Total.Impressions)
+fotos_sd_impresiones = sd(fotos_datos$Total.Impressions)
+fotos_min_impresiones = min(fotos_datos$Total.Impressions)
+fotos_max_impresiones = max(fotos_datos$Total.Impressions)
+resumen_fotos_impresiones = format(round(c(fotos_mediana_impresiones,fotos_media_impresiones,fotos_sd_impresiones,fotos_min_impresiones,fotos_max_impresiones)),scientific = F)
+
+
+estados_mediana_impresiones = median(estados_datos$Total.Impressions)
+estados_media_impresiones = mean(estados_datos$Total.Impressions)
+estados_sd_impresiones = sd(estados_datos$Total.Impressions)
+estados_min_impresiones = min(estados_datos$Total.Impressions)
+estados_max_impresiones = max(estados_datos$Total.Impressions)
+resumen_estados_impresiones = format(round(c(estados_mediana_impresiones,estados_media_impresiones,estados_sd_impresiones,estados_min_impresiones,estados_max_impresiones)),scientific = F)
+
+
+link_mediana_impresiones = median(link_datos$Total.Impressions)
+link_media_impresiones = mean(link_datos$Total.Impressions)
+link_sd_impresiones = sd(link_datos$Total.Impressions)
+link_min_impresiones = min(link_datos$Total.Impressions)
+link_max_impresiones = max(link_datos$Total.Impressions)
+resumen_link_impresiones = format(round(c(link_mediana_impresiones,link_media_impresiones,link_sd_impresiones,link_min_impresiones,link_max_impresiones)),scientific = F)
+
+
+video_mediana_impresiones = median(video_datos$Total.Impressions)
+video_media_impresiones = mean(video_datos$Total.Impressions)
+video_sd_impresiones = sd(video_datos$Total.Impressions)
+video_min_impresiones = min(video_datos$Total.Impressions)
+video_max_impresiones = max(video_datos$Total.Impressions)
+resumen_video_impresiones = format(round(c(video_mediana_impresiones,video_media_impresiones,video_sd_impresiones,video_min_impresiones,video_max_impresiones)),scientific = F)
 
 ```
 
 
 
+| Tipo de Post |  Mediana  | Media | Desviación Estándar| Mínimo | Máximo
+| :----------: | :---------: | :---------: | :---------: | :---------: | :---------:|
+| Link         |  `r  resumen_link_impresiones[1]  ` | `r resumen_link_impresiones[2]`   | `r resumen_link_impresiones[3]`| `r  resumen_link_impresiones[4]  ` | `r  resumen_link_impresiones[5]  `
+| Foto         |  `r  resumen_fotos_impresiones[1]  `| `r  resumen_fotos_impresiones[2] `  | `r  resumen_fotos_impresiones[3] `| `r  resumen_fotos_impresiones[4] ` | `r  resumen_fotos_impresiones[5] `|
+| Video        |  `r  resumen_video_impresiones[1]  `| `r resumen_video_impresiones[2]`  | `r resumen_video_impresiones[3]`| `r  resumen_video_impresiones[4]  `| `r  resumen_video_impresiones[5]  `|
+| Estado       |  `r  resumen_estados_impresiones[1] `| `r resumen_estados_impresiones[2]` | `r link_datos$Total.Impressions[3]`| `r resumen_estados_impresiones[4]`| `r resumen_estados_impresiones[5]`    |
+
+Como podemos ver los post tipo **video son los que tienen mayor mediana y media**. No obstante tienen una gran dispersión en sus datos. Los post tipo **link se comportan parecido a las fotos**, sin embargo vemos que el máximo de este último es bastante más grande. Luego sobre los estados, vemos que tienen **mayor mediana y menor media** que las dos categorías anteriores.
+
+Por lo que, en general, vemos que los **videos tienen un mayor número de impresiones**. No obstante, los **estados tienen una distribución bastante simétrica**, además el mínimo de impresiones es más grande que el de los Link y Fotos.   
+
+
+## Interacciones 
+
+### Interacciones con tu página
+
+Esta variable se refiere a el número total de interacciones de tu página, es decir, likes, shares, follow, contacto, busqueda,entre otras cosas.
+
+Veamos gráficamente como se comporta
+
+```{r}
+g6 = ggplot(data = facebook_data, aes(x =Engaged.Usuarios,y = Type, fill = Type)) + 
+  geom_boxplot(outlier.colour="red", outlier.size = 1)+
+  labs( x = "Número de Interacciones", y = "Tipo de post")+
+  ggtitle("Interacciones de la Página")+
+  scale_fill_brewer(palette = "Accent")
+
+g7 = ggplot(data = facebook_data, aes(x =numero.personas.click.no.hist, y = Type,fill = Type)) + 
+  geom_boxplot(outlier.colour="red", outlier.size = 1)+
+  labs( x = "Tipo de Post", y = "Numero de interacciones")+
+  ggtitle("Interacciones del Post sin Subir Historia")+
+  scale_fill_brewer(palette = "Accent")
+#g7 
+g6 
+#cowplot::plot_grid(g6,g7, labels = "AUTO")
+```
+
+
+```{r}
+estados_mediana_interacciones = median(estados_datos$Engaged.Usuarios)
+estados_media_interacciones = mean(estados_datos$Engaged.Usuarios)
+estados_sd_interacciones = sd(estados_datos$Engaged.Usuarios)
+estados_min_interacciones = min(estados_datos$Engaged.Usuarios)
+estados_max_interacciones = max(estados_datos$Engaged.Usuarios)
+resumen_estados_interacciones = format(round(c(estados_mediana_interacciones,estados_media_interacciones,estados_sd_interacciones,estados_min_interacciones,estados_max_interacciones)),scientific = F)
+
+fotos_mediana_interacciones = median(fotos_datos$Engaged.Usuarios)
+fotos_media_interacciones = mean(fotos_datos$Engaged.Usuarios)
+fotos_sd_interacciones = sd(fotos_datos$Engaged.Usuarios)
+fotos_min_interacciones = min(fotos_datos$Engaged.Usuarios)
+fotos_max_interacciones = max(fotos_datos$Engaged.Usuarios)
+resumen_fotos_interacciones = format(round(c(fotos_mediana_interacciones,fotos_media_interacciones,fotos_sd_interacciones,fotos_min_interacciones,fotos_max_interacciones)),scientific = F)
+
+video_mediana_interacciones = median(video_datos$Engaged.Usuarios)
+video_media_interacciones = mean(video_datos$Engaged.Usuarios)
+video_sd_interacciones = sd(video_datos$Engaged.Usuarios)
+video_min_interacciones = min(video_datos$Engaged.Usuarios)
+video_max_interacciones = max(video_datos$Engaged.Usuarios)
+resumen_video_interacciones = format(round(c(video_mediana_interacciones,video_media_interacciones,video_sd_interacciones,video_min_interacciones,video_max_interacciones)),scientific = F)
+
+link_mediana_interacciones = median(link_datos$Engaged.Usuarios)
+link_media_interacciones = mean(link_datos$Engaged.Usuarios)
+link_sd_interacciones = sd(link_datos$Engaged.Usuarios)
+link_min_interacciones = min(link_datos$Engaged.Usuarios)
+link_max_interacciones = max(link_datos$Engaged.Usuarios)
+resumen_link_interacciones = format(round(c(link_mediana_interacciones,link_media_interacciones,link_sd_interacciones,link_min_interacciones,link_max_interacciones)),scientific = F)
+
+```
+
+
+| Tipo de Post |  Mediana  | Media | Desviación Estándar| Mínimo | Máximo
+| :----------: | :---------: | :---------: | :---------: | :---------: | :---------:|
+| Link         |  `r  resumen_link_interacciones[1]  ` | `r resumen_link_interacciones[2]`   | `r resumen_link_interacciones[3]`| `r  resumen_link_interacciones[4]  ` | `r  resumen_link_interacciones[5]  `
+| Foto         |  `r  resumen_fotos_interacciones[1]  `| `r  resumen_fotos_interacciones[2] `  | `r  resumen_fotos_interacciones[3] `| `r  resumen_fotos_interacciones[4] ` | `r  resumen_fotos_interacciones[5] `|
+| Video        |  `r  resumen_video_interacciones[1]  `| `r resumen_video_interacciones[2]`  | `r resumen_video_interacciones[3]`| `r  resumen_video_interacciones[4]  `| `r  resumen_video_interacciones[5]  `|
+| Estado       |  `r  resumen_estados_interacciones[1] `| `r resumen_estados_interacciones[2]` | `r resumen_estados_interacciones[3]`| `r resumen_estados_interacciones[4]`| `r resumen_estados_interacciones[5]`    |
+
+
+### Interacciones con tu post
+
+
+```{r}
+aux = facebook_data$Total.clicks.en.post
+new=aux[which(aux< 15000)]
+new2 = c(new,mean(new),mean(new))
+
+aux2 = facebook_data$Type[1:length(new)]
+aux2 = c(aux2, "Photo", "Photo")
+
+g8 = ggplot(data = facebook_data, aes(x =new2,y = aux2, fill = Type)) + 
+  geom_boxplot()+
+  labs( x = "Número de Clicks", y = "Tipo de Post")+
+  ggtitle("Número de Clicks en el Post")+
+  scale_fill_brewer(palette = "Accent")
+
+g8
+```
 
 
 
 
+```{r}
+link_mediana_interacciones2 = median(link_datos$Total.clicks.en.post)
+link_media_interacciones2 = mean(link_datos$Total.clicks.en.post)
+link_sd_interacciones2 = sd(link_datos$Total.clicks.en.post)
+link_min_interacciones2 = min(link_datos$Total.clicks.en.post)
+link_max_interacciones2 = max(link_datos$Total.clicks.en.post)
+resumen_link_interacciones2 = round(c(link_mediana_interacciones2,link_media_interacciones2,link_sd_interacciones2,link_min_interacciones2,link_max_interacciones2))
+
+video_mediana_interacciones2 = median(video_datos$Total.clicks.en.post)
+video_media_interacciones2 = mean(video_datos$Total.clicks.en.post)
+video_sd_interacciones2 = sd(video_datos$Total.clicks.en.post)
+video_min_interacciones2 = min(video_datos$Total.clicks.en.post)
+video_max_interacciones2 = max(video_datos$Total.clicks.en.post)
+resumen_video_interacciones2 = round(c(video_mediana_interacciones2,video_media_interacciones2,video_sd_interacciones2,video_min_interacciones2,video_max_interacciones2))
+
+fotos_mediana_interacciones2 = median(fotos_datos$Total.clicks.en.post)
+fotos_media_interacciones2 = mean(fotos_datos$Total.clicks.en.post)
+fotos_sd_interacciones2 = sd(fotos_datos$Total.clicks.en.post)
+fotos_min_interacciones2 = min(fotos_datos$Total.clicks.en.post)
+fotos_max_interacciones2 = max(fotos_datos$Total.clicks.en.post)
+resumen_fotos_interacciones2 = round(c(fotos_mediana_interacciones2,fotos_media_interacciones2,fotos_sd_interacciones2,fotos_min_interacciones2,fotos_max_interacciones2))
+
+estados_mediana_interacciones2 = median(estados_datos$Total.clicks.en.post)
+estados_media_interacciones2 = mean(estados_datos$Total.clicks.en.post)
+estados_sd_interacciones2 = sd(estados_datos$Total.clicks.en.post)
+estados_min_interacciones2 = min(estados_datos$Total.clicks.en.post)
+estados_max_interacciones2 = max(estados_datos$Total.clicks.en.post)
+resumen_estados_interacciones2 = round(c(estados_mediana_interacciones2,estados_media_interacciones2,estados_sd_interacciones2,estados_min_interacciones2,estados_max_interacciones2))
+```
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+| Tipo de Post |  Mediana  | Media | Desviación Estándar| Mínimo | Máximo
+| :----------: | :---------: | :---------: | :---------: | :---------: | :---------:|
+| Link         |  `r  resumen_link_interacciones2[1]  ` | `r resumen_link_interacciones2[2]`   | `r resumen_link_interacciones2[3]`| `r  resumen_link_interacciones2[4]  ` | `r  resumen_link_interacciones2[5]  `
+| Foto         |  `r  resumen_fotos_interacciones2[1]  `| `r  resumen_fotos_interacciones2[2] `  | `r  resumen_fotos_interacciones2[3] `| `r  resumen_fotos_interacciones2[4] ` | `r  resumen_fotos_interacciones2[5] `|
+| Video        |  `r  resumen_video_interacciones2[1]  `| `r resumen_video_interacciones2[2]`  | `r resumen_video_interacciones2[3]`| `r  resumen_video_interacciones2[4]  `| `r  resumen_video_interacciones2[5]  `|
+| Estado       |  `r  resumen_estados_interacciones2[1] `| `r resumen_estados_interacciones2[2]` | `r resumen_estados_interacciones2[3]`| `r resumen_estados_interacciones2[4]`| `r resumen_estados_interacciones2[5]`    |
 
 
 
