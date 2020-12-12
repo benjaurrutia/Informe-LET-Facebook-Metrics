@@ -15,15 +15,15 @@ knitr::opts_chunk$set(echo = FALSE, message= FALSE,warning=FALSE)
 
 # Introducción
 
-Hoy en día las redes sociales son cada vez más comunes entre las personas, llegando al punto en el que es muy difícil conocer a alguien que no utilice Twitter, Instagram o **Facebook**. 
+Hoy en día las redes sociales son cada vez más comunes entre las personas, llegando al punto en el que es muy difícil conocer a alguien que no utilice Twitter, Instagram o **Facebook**. Esta última mencionada es una de las más conocidas. Se estima que hay alrededor de unos **2.400 millones de usuarios activos** [(fuente: Hootsuite ,Febrebo 19, 2020)](https://blog.hootsuite.com/es/estadisticas-de-facebook/#:~:text=1.%20Facebook%20tiene%202.41%20mil,estrategia%20de%20marketing%2C%20es%20esta.). A nivel mundial, sabemos que millones de personas publican distintos tipos de post y cada uno con distintos objetivos, como por ejemplo, vender un producto, informar sobre algún tema, etc.
 
-  Esta última mencionada es una de las más conocidas. Se estima que hay alrededor de unos **2.400 millones de usuarios activos**. A nivel mundial, sabemos que millones de personas publican distintos tipos de post y cada uno con distintos objetivos, como por ejemplo, vender un producto, informar sobre algún tema, etc.
+#respaldar datos 2.400
 
-  Muchos usuarios buscan crecer en la red social. Para lograr esto, **es de suma importancia saber cómo se comporta tu post**. Es por esto que Facebook implementó estadísticas de cada post que uno realiza. Independiente de cual sea el objetivo del post, uno puede tener información sobre el alcance de tu post, número de likes, interacciones, entre otras cosas. No obstante, muchos usuarios no saben como utilizar esta herramienta para sacarle un mejor provecho a sus páginas.
+  Muchos usuarios buscan crecer en la red social. Para lograr esto, **es de suma importancia saber cómo se comporta tu post**. Es por esto que Facebook implementó estadísticas de cada publicación que uno realiza. Independiente de cual sea el objetivo, uno puede tener información sobre el alcance, número de likes, interacciones, entre otras cosas. No obstante, muchos usuarios no saben cómo utilizar esta herramienta para sacarle un mejor provecho a sus páginas.
 
-  Es por esto que en este informe se busca **examinar que impacto tiene, en Facebook, cada tipo de post**. Vamos a analizar el alcance, el número de interacciones, likes, comentarios, entre otras cosas. Para ello, estudiaremos por separado cada tipo de publicación: videos, fotos, estados y link.
+  Es por esto que en este informe se busca **examinar qué impacto tiene, en Facebook, cada tipo de post**. Vamos a analizar el alcance, el número de interacciones, de likes, de comentarios, entre otros. Para ello, estudiaremos por separado cada tipo de publicación: videos, fotos, estados y links.
 
-  En este trabajo vamos a **analizar detalladamente las variables más influyentes** de la base de datos `Facebook metrics Data Set`. Cada variable va a tener una breve explicación de lo que representa. Luego vamos a ver, a través de gráficos y medidas de resúmen, cómo se comporta cada tipo de post para concluir qué nos conviene compartir, videos, fotos, estados o link, para tener un mayor impacto en esta red social. 
+  En este trabajo vamos a **analizar detalladamente las variables más influyentes** de la base de datos `Facebook metrics Data Set`. Cada variable va a tener una breve explicación de lo que representa. Luego vamos a ver, a través de gráficos y medidas de resúmen, cómo se comporta cada tipo de post para concluir si nos conviene compartir un  video, una foto, un estado o un link, para tener un mayor impacto en esta red social. 
 
 
 
@@ -44,26 +44,6 @@ library(readr)
 setwd("C:/Users/benja/Desktop/Benjamin Urrutia/LET/Informe-LET-Facebook-Metrics/Infome LET/InformeF")
 #facebook_data=import("dataset_Facebook.csv")
 facebook_data = read_csv2("datos_con_procesar/Datos_listos.csv")
-
-#names(facebook_data)[1] <- "Page.Total.Likes"
-#names(facebook_data)[2] <- "Type"
-#names(facebook_data)[3] <- "Category"
-#names(facebook_data)[4] <- "Post.Month"
-#names(facebook_data)[5] <- "Post.Weekday"
-#names(facebook_data)[6] <- "Post.Hour"
-#names(facebook_data)[7] <- "Paid"
-#names(facebook_data)[8] <- "Total.Reach" #usuarios que vieron el post
-#names(facebook_data)[9] <- "Total.Impressions" #numero de veces que se vio tu post #impresiones (mas de una por usuario)
-#names(facebook_data)[10] <- "Engaged.Usuarios" #personas que interactuaron
-#names(facebook_data)[11] <- "numero.personas.click.no.hist" #personas que interactuaron #sin subir historia
-#names(facebook_data)[12] <- "Total.clicks.en.post" #cada usuario puede hacer mas de un #click
-#names(facebook_data)[13] <- #"Impressions.for.Users.Fans"#Impresiones.de.perosnas.que.siguen.tu.pagina
-#names(facebook_data)[14] <- "Reach.by.Users.Fans"#usuarios que vieron el post y siguen #la pag
-#names(facebook_data)[15] <- "Users.Fans.and.Engagement" #usuarios que iguen la pagina e #interactuan
-#names(facebook_data)[16] <- "Comment"
-#names(facebook_data)[17] <- "Like"
-#names(facebook_data)[18] <- "Share"
-#names(facebook_data)[19] <- "Total.Interactions" 
 
 Indice_foto = c()
 Indice_video = c()
@@ -94,65 +74,71 @@ link_datos = facebook_data[Indice_link,]
 
 ## Distintos tipos de post
 
-Para partir nuestro analisis veamos que tipo de post hay y que tantas publicaciones tienen cada uno de estos.
+Para partir nuestro análisis veamos qué tipos de post existen y qué tantas publicaciones tienen cada uno de estos.
 
-Entendamos como `Link` como un enlace que lleva a otra página web ,`Photo` un post que contiene una imagen y`Status` una publicación que contiene solo texto  (`Video` es autoexplicativo)
+En nuestro caso tenemos 4 tipos de publicaciones. En primer lugar, tenemos el post tipo `Link` que consiste en un enlace para acceder a otra página web. En segundo lugar, el  tipo `Photo` es el que contiene una imágen. En tercer lugar, `Status` se refiere a las publicaciones que son solamente texto. Finalmente,  los `Videos` son aquellas que contienen material audiovisual.
 
-Veamos gráficamente que sucede
+
+Veamos gráficamente qué sucede en nuestros datos.
 
 ```{r}
-g1 = ggplot(data = facebook_data, aes(x = Type, fill = Type)) + 
+g1 = ggplot(data = facebook_data, aes(x = reorder(Type, Type),  fill = Type)) + 
   geom_bar()+
-  ggtitle("Tipo de publicación")+
+  ggtitle("Cantidad de publicaciones realizadas en nuestra base de datos")+
   xlab("Tipo")+
-  ylab("Frecuencia")+
-  scale_fill_brewer(palette = "Accent")
+  ylab("Número de publicaciones")+
+  scale_fill_brewer(palette = "Accent")+
+  labs(fill = "Tipo de Publicación")+
+  geom_text(aes(label=..count..), stat='count', position=position_dodge(0.9), vjust=-0.5, size=3.5)
+
+#reordenar gráfico de barras
+
+#Agregar frecuencia a las barras
+
+#eliminar columna de la tabla
 
 g1
 
 
+
 ```
 
-Como podemos ver en el gráfico, el número de publicaciones de fotos es mucho más alto en comparación al resto de post. 
+Como podemos ver en el gráfico, el número de publicaciones de fotos (`Photo`) es mucho más alto en comparación al resto de los tipos post. 
 
+Podemos notar la diferencia también en la siguiente tabla
 
-Podemos notar la diferencia en la siguiente tabla
+| Tipo de Post |         Porcentaje del Total               |            
+| :------------: | :-------------------------------------------: |
+| Link           | `r nrow(link_datos)/nrow(facebook_data)*100 `%   |
+| Foto         | `r nrow(fotos_datos)/nrow(facebook_data)*100 `%  |
+| Video          | `r nrow(video_datos)/nrow(facebook_data)*100 `%  |
+| Estado      | `r nrow(estados_datos)/nrow(facebook_data)*100 `%|
 
-| Tipo de Post | Cantidad de publicaciones |          Porcentaje del Total               |            
-| :------------: | :-------------------------: | :-------------------------------------------: |
-| Link   |  `r  nrow(link_datos) `         | `r nrow(link_datos)/nrow(facebook_data)*100 `%   |
-| Foto   |  `r  nrow(fotos_datos) `        | `r nrow(fotos_datos)/nrow(facebook_data)*100 `%  |
-| Video  |  `r  nrow(video_datos) `        | `r nrow(video_datos)/nrow(facebook_data)*100 `%  |
-| Estado |  `r  nrow(estados_datos) `      | `r nrow(estados_datos)/nrow(facebook_data)*100 `%|
-
-Como vemos, las fotos corresponden a un 85.2% de las publicaciones totales, mientras que el resto de publicaciones solo abarcan un 14.8%.  
-
-Es por esto que analizar, por ejemplo, el total de likes de cada publicación no tiene mucho sentido ya que, al haber más fotos, el total de likes va a ser mayor que el resto. No obstante, esto no significa que una foto tenga más likes que un video.
-
-Por esta razón, nuestro análisis se va a enfocar en cada tipo de post y como se comporta este.
+Notamos que las fotos corresponden a un 85.2% de las publicaciones totales, mientras que el resto de publicaciones solo abarcan un 14.8%. Es por esto que analizar, por ejemplo, el total de likes de cada publicación no tiene mucho sentido ya que, al haber más fotos, el total de likes va a ser mayor que el resto. No obstante, esto no significa que una foto tenga más likes que un video. Por esta razón, nuestro análisis se va a enfocar en cada tipo de post y cómo se comporta.
 
 ## Categoría de la publicación
 
-Esta variable cuenta con tres tipos de categorias: **Action**, **Product** y **Inspiration**. La categoria *action*
-se refiere a __ofertas especiales y concursos__, *Product* hace referencia a __publicidad directa con contenido de marca explícito__ y, por último, *Insiration* esta relacionado con post __sin contenido de marca explícito__.
+Esta variable cuenta con tres tipos de categorias: **Action (1)**, **Product (2)** y **Inspiration (3)**. La categoria *action*
+se refiere a __ofertas especiales y concursos__, *Product* hace referencia a __publicidad directa con contenido de marca explícito__ y, por último, *Inspiration* está relacionado con un post __sin contenido de marca explícito__.
 
-Veamos gráficamente como se comportan
+Veamos gráficamente cómo se comportan
 
 ```{r}
 p1 = ggplot(data = facebook_data, aes(x = Category, fill = Type)) + 
-  geom_bar(position=position_fill())+
-  labs( x = "Tipo", y = "Proporción")+
-  ggtitle("Tipo de publicación")+
+  geom_bar(position="dodge")+
+  labs( x = "Categoría", y = "Proporción")+
+  ggtitle("Categoría de publicación")+
   scale_fill_brewer(palette = "Accent")+
-  theme_minimal()
+  labs(fill = "Tipo de Publicación")
 
 p2 = ggplot(data = facebook_data, aes(x = Category, fill = Type)) + 
-  geom_bar()+
+  geom_bar(position = "dodge")+
   labs( x = "Categoría", y = "Frecuencia")+
   ggtitle("Categoría de la publicación")+
   scale_fill_brewer(palette = "Accent") +
-  theme_minimal()
-cowplot::plot_grid(p2,p1, labels = "AUTO")
+  labs(fill = "Tipo de Publicación")
+#cowplot::plot_grid(p2,p1, labels = "AUTO")
+p1
 
 cat1_estados = c()
 cat2_estados = c()
@@ -217,11 +203,11 @@ for (i in 1:nrow(link_datos)){
 
 ```
 
-Como podemos ver en el primer gráfico, hay una mayor cantidad de post dentro de la categoria *Action*, seguido de *Inspiration* y, por último, *Product*. 
+Notamos que en el primer gráfico, hay una mayor cantidad de post dentro de la categoria *Action (1)*, seguido de *Inspiration(2)* y, por último, *Product(3)*. 
 
 En el segundo, vemos de manera gráfica la proporción de cada post dentro de cada categoría.
 
-Veamos numericamente como se comporta cada tipo publicación
+Veamos numéricamente cómo se comporta cada tipo publicación
 
 
 | Tipo de Post | Categoria 1 | Categoria 2 | Categoria 3 |
@@ -231,15 +217,15 @@ Veamos numericamente como se comporta cada tipo publicación
 | Video        |  `r  length(cat1_video)  `| `r length(cat2_video)`  | `r length(cat3_video)`|
 | Estado       |  `r  length(cat1_estados) `| `r length(cat2_estados)` | `r length(cat3_estados)`|
 
-Como mencionamos antes, generalmente, los links y videos son para concursos y ofertas especiales mientras que los estados se relacionan en su mayoría con publicidad directa. En las fotos pasa algo similiar, hay una gran cantidad dentro de la categoria Action, seguido de Inspiration y, por último, Product.
+Como mencionamos antes, generalmente los links y videos son para concursos y ofertas especiales, mientras que los estados se relacionan en su mayoría con publicidad directa. Sobre las fotos, podemos notar que hay una gran cantidad dentro de la categoria Action, seguido de Inspiration y, por último, Product.
 
 Teniendo en cuenta como se suelen utlizan los tipos de post, veamos los impactos que estos tienen dentro de Facebook.
 
-## Alcance Total
+## Alcance total
 
-La variable `Alcance Total` se refiere a la cantidad de usuarios únicos que vieron tu post, es decir, si un mismo usuario ve tu publicación dos veces solo se contabiliza una.
+La variable `Alcance total` se refiere a la cantidad de usuarios únicos que vieron tu post, es decir, si un mismo usuario ve tu publicación dos veces, solo se contabiliza una.
 
-Para analizar como se comportan los post, vamos a ver un gráfico Boxplot. Para aprender a interpretarlo podemos ver el siguiente [link](https://www.pgconocimiento.com/diagrama-boxplot/#:~:text=Asimetr%C3%ADa%20positiva%20o%20segada%20a,la%20inferior%20a%20la%20mediana.).
+Analicemos mediante un Boxplot cómo se comportan
 
 
 
@@ -254,23 +240,27 @@ g4 = ggplot(data = facebook_data, aes(x =Total.Reach,y = Type, fill = Type)) +
                outlier.size=1)+
   labs( x = "Alcance", y = "Tipo de Post")+
   ggtitle("Alcance de la publicación")+
-  scale_fill_brewer(palette = "Accent")
+  scale_fill_brewer(palette = "Accent")+
+  theme(legend.position = "none")
+#quitar la leyenda  
+  
 g4 
+
 ```
 
-El gráfico BoxPlot sirve para ver como es la **dispersión de los datos**. Por ejemplo, tomemos el boxplot de los videos. La caja amarilla contiene el 50% de los datos. El **límite inferior** de esta corresponde al primer cuartil (**20% de los datos**) y el **límite superior** el tercer cuartil (**75% de los datos**). La linea del medio es la **mediana** (50% de los datos) y las lineas que salen de la caja corresponde a los datos que superan el primer o tercer cuartil. 
+El gráfico BoxPlot sirve para ver cómo es la **dispersión de los datos**. Por ejemplo, tomemos el boxplot de los videos. La caja amarilla contiene el 50% de los datos. El **límite inferior** de esta corresponde al primer cuartil (**25% de los datos**) y el **límite superior** el tercer cuartil (**75% de los datos**). La línea del medio es la mediana (**50% de los datos**) y las líneas que salen de la caja corresponde a los datos que superan el primer o tercer cuartil. 
 
-Además, los puntos que aparecen en azul corresponden a **outliers** (datos que están bastante alejados del resto)
+Además, los puntos que aparecen en rojo corresponden a **outliers** (datos que están bastante alejados del resto).
 
-Como podemos ver la categoría `Video` es la que **mayor mediana** tiene. No obstante hay que tener en cuenta que hay solo `r nrow(video_datos)` datos de este post en nuestra base de datos. 
+Como podemos ve,r la categoría `Video` es la que **mayor mediana** tiene. No obstante hay que tener en cuenta que hay solo `r nrow(video_datos)` datos sobre este post en nuestra base. 
 
 Sobre la categoría `Status` o Estado, vemos que tiene una **menor mediana** en comparación a los **videos** pero levemente **mayor** a la de los **otros tipos de post**. Además presenta un valor extremo por la parte superior.
 
-Sobre la categoria `link` vemos que, a pesar de tener una **mediana menor que los estados**, vemos que tiene un **alcance máximo más alto** que el de estos.
+Respecto de la categoría `link` destacamos que, a pesar de tener una **mediana menor que los estados**, su **tercer cuartil** es mayor.
 
-Por último, sobre la variable `Photo` o Foto, si bien es la que **menor mediana** tiene, es la que más datos presenta. Además, podemos ver que tiene **muchos valores extremos o outliers**. Podemos ver que la mediana está cercana al límite inferior del cajón, lo que quiere decir que la mitad de los datos se encuentran bajo ese valor, con un alcance bastante pequeño, mientras que la otra mitad se encuentra sobre ese valor, con un alcance bastante mayor.
+Por último, en el caso de la variable `Photo` o Foto, si bien es la que **menor mediana** tiene, es la que más datos presenta. Además, podemos ver que tiene **muchos valores extremos o outliers**. Notamos que la mediana está cercana al límite inferior del cajón, lo que quiere decir que la mitad de los datos se encuentran bajo ese valor, con un alcance bastante pequeño, mientras que la otra mitad se encuentra sobre ese valor, con un alcance bastante mayor.
 
-Ahora veamos númericamente.  
+La siguiente tabla muestra los estadísticos de resúmen para los tipos de publicaciones.  
 
 
 ```{r}
@@ -322,41 +312,44 @@ resumen_video_alcance = round(c(video_mediana_alcance,video_media_alcance,video_
 | Estado       |  `r  format(resumen_estados_alcance[1], scientific = F) `| `r  format(resumen_estados_alcance[2], scientific = F) ` | `r  resumen_estados_alcance[3] `| `r  resumen_estados_alcance[4] `|`r  format(resumen_estados_alcance[5], scientific = F) `|
 
 
-Podemos ver en la tabla anterior que **los Videos tienen mayor mediana y media** que los demás tipos de post. No obstante, al ser pocos datos, tambien tienen una gran dispersión. 
+Podemos observar en la tabla anterior que **los videos tienen mayor mediana y media** que los demás tipos de post. No obstante, al ser pocos datos, tambien tienen una gran dispersión. 
 
-Además, vemos que el **máximo alcance de las Fotos** es mayor que el de cualquier otro tipo de post. No obstante, tiene una mediana bastante pequeña, siendo la menor de las categorías y, además, vemos que la media tambien es de las más bajas junto con los Estados.
+Además, el **máximo alcance de las fotos** es mayor que el de cualquier otro tipo de post. No obstante, tiene una mediana bastante pequeña, siendo la menor de las categorías. Sobre la media advertimos que es de las más bajas junto con la de los estados.
 
-Por lo que, en general, los Videos suelen tener un mayor alcance que los demás post. Sin embargo, hay que tener en cuenta que hay pocos datos en esta categoria. Cabe destacar que los **Estados tienen una media y  mediana bastante parecida**, por lo que su dispersión es poca, teniendo una desviación bastante pequeña. 
+Esto nos permite afirmar que, en general, los videos suelen tener un mayor alcance que los demás post. Sin embargo, hay que tener en cuenta que hay pocos datos en esta categoria. Cabe destacar que los **Estados tienen una media y  mediana bastante parecida**, por lo que su dispersión es poca, con una desviación bastante pequeña, por lo que es probable que un post se encuentre cercano a estos valores. 
 
 ## Impresiones Totales
 
-Esta variable se refiere a la **cantidad de veces que se ve tu post**. A diferencia de la variable anterior, en este caso, si un usuario ve más de una vez tu post, se contabilizan todas las veces que las haya visto, es decir, **un único usuario puede generar más de una impresión**.
+Esta variable se refiere a la **cantidad de veces que se ve tu post**. A diferencia de la variable anterior, en este caso, si un usuario ve más de una vez tu post, se contabilizan todas las veces que lo haya visto, es decir, **un único usuario puede generar más de una impresión**.
 
-Veamos gráficamente como se comporta.
+Veamos gráficamente cómo se comporta.
 
 ```{r}
 aux = facebook_data$Total.Impressions
 new=aux[which(aux< 3*10^5)]
 new2 = c(new,mean(new),mean(new),mean(new),mean(new),mean(new),mean(new))
 
+
 aux2 = facebook_data$Type[1:length(new)]
 aux2 = c(aux2, "Photo", "Photo", "Photo", "Photo","Photo","Photo")
 
 g5 = ggplot(data = facebook_data, aes(x =new2, y  = aux2,fill = Type)) + 
   geom_boxplot(outlier.colour="red", outlier.size = 1)+
-  labs( x = "Impresiones", y = "Tipo de Post")+
-  ggtitle("Impresiones del Post")+
-  scale_fill_brewer(palette = "Accent")
+  labs( x = "Impresiones", y = "Tipo de post")+
+  ggtitle("Número de mpresiones del post")+
+  scale_fill_brewer(palette = "Accent")+
+  scale_x_continuous(labels = scales::comma) +
+  theme(legend.position = "none")
 g5 
 
 
 ```
 
-En la gráfica anterior podemos ver que **los videos en general tienen mayor numero de impresiones**, seguido de los estados y las fotos. Nuevamente **las fotos tienen una gran cantidad de outliers** y su **mediana es menor** que la de las otras dos categorias. 
+En la gráfica anterior advertimos que **los videos tienen mayor número de impresiones**, seguido de los estados y las fotos. Nuevamente **las fotos tienen una gran cantidad de outliers** y su **mediana es menor** que la de las otras categorias. 
 
-Sobre los link, vemos que tienen **menor mediana** que las otras categorías.
+Acerca de los link, notamos que tienen **menor mediana** que las otras categorías.
 
-Veamos en una tabla como se comportan.
+Analicemos sus estadísticos de resúmen.
 
 ```{r}
 fotos_mediana_impresiones = median(fotos_datos$Total.Impressions)
@@ -401,35 +394,45 @@ resumen_video_impresiones = format(round(c(video_mediana_impresiones,video_media
 | Video        |  `r  resumen_video_impresiones[1]  `| `r resumen_video_impresiones[2]`  | `r resumen_video_impresiones[3]`| `r  resumen_video_impresiones[4]  `| `r  resumen_video_impresiones[5]  `|
 | Estado       |  `r  resumen_estados_impresiones[1] `| `r resumen_estados_impresiones[2]` | `r link_datos$Total.Impressions[3]`| `r resumen_estados_impresiones[4]`| `r resumen_estados_impresiones[5]`    |
 
-Como podemos ver los post tipo **video son los que tienen mayor mediana y media**. No obstante tienen una gran dispersión en sus datos. Los post tipo **link se comportan parecido a las fotos**, sin embargo vemos que el máximo de este último es bastante más grande. Luego sobre los estados, vemos que tienen **mayor mediana y menor media** que las dos categorías anteriores.
+Como observamos los post tipo **video son los que tienen mayor mediana y media**. No obstante tienen una gran dispersión en sus datos. Los **link** se comportan parecido a las fotos, sin embargo  el máximo de este último es bastante mayor. Luego, respecto de  los **estados**, vemos que tienen mayor mediana y menor media que las dos categorías anteriores.
 
-Por lo que, en general, vemos que los **videos tienen un mayor número de impresiones**. No obstante, los **estados tienen una distribución bastante simétrica**, además el mínimo de impresiones es más grande que el de los Link y Fotos.   
+Esto nos permite afirmar que los **videos tienen un mayor número de impresiones**. No obstante, los **estados tienen una distribución bastante simétrica**, además el mínimo de impresiones es más grande que el de los Link y Fotos. Sobre esta última, algo importante, es que posee varios datos que están por sobre el tercer cuartil, en otras palabras, hay hartas publicaciones que tienen un gran número de impresiones, a pesar de que la categoría tiene una pequeña mediana y media.
 
 
 ## Interacciones 
 
+Esta variable la vamos a separar en dos. En primer lugar, vamos a analizar el número de interacciones que genera cada tipo de post **sobre tu página**. En segundo lugar, vamos a ver como interactua la gente **con tu mismo post**. 
+
 ### Interacciones con tu página
 
-Esta variable se refiere a el número total de interacciones de tu página, es decir, likes, shares, follow, contacto, busqueda,entre otras cosas.
+Esta variable se refiere al número total de **interacciones de tu página**, es decir, likes, shares, follow, contacto, busqueda, entre otros.
 
-Veamos gráficamente como se comporta
+Veamos gráficamente cómo se comporta
 
 ```{r}
 g6 = ggplot(data = facebook_data, aes(x =Engaged.Usuarios,y = Type, fill = Type)) + 
   geom_boxplot(outlier.colour="red", outlier.size = 1)+
-  labs( x = "Número de Interacciones", y = "Tipo de post")+
-  ggtitle("Interacciones de la Página")+
-  scale_fill_brewer(palette = "Accent")
+  labs( x = "Número de interacciones con tu página", y = "Tipo de post")+
+  ggtitle("Número de interacciones con tu página")+
+  scale_fill_brewer(palette = "Accent")+
+  theme(legend.position = "none")
 
-g7 = ggplot(data = facebook_data, aes(x =numero.personas.click.no.hist, y = Type,fill = Type)) + 
-  geom_boxplot(outlier.colour="red", outlier.size = 1)+
-  labs( x = "Tipo de Post", y = "Numero de interacciones")+
-  ggtitle("Interacciones del Post sin Subir Historia")+
-  scale_fill_brewer(palette = "Accent")
+#g7 = ggplot(data = facebook_data, aes(x =numero.personas.click.no.hist, y = Type,fill = Type)) + 
+  #geom_boxplot(outlier.colour="red", outlier.size = 1)+
+  #labs( x = "Tipo de Post", y = "Numero de interacciones de tu post")+
+  #ggtitle("Interacciones del Post sin Subir Historia")+
+  #scale_fill_brewer(palette = "Accent")+
+  #theme(legend.position = "none")
 #g7 
 g6 
+
+
 #cowplot::plot_grid(g6,g7, labels = "AUTO")
 ```
+
+Podemos ver que los videos y estados tienen una **mediana similar** y mayor que la de las otras dos categorías. No obstante, tanto el **primer cuartil como el tercero, son mayores** que el de los videos. Por lo que esta categoría suele generar un mayor número de interacciones. Además, los post  que **menor número de interacciones** genera son los **links**. 
+
+Veamos en una tabla estos datos. 
 
 
 ```{r}
@@ -472,8 +475,19 @@ resumen_link_interacciones = format(round(c(link_mediana_interacciones,link_medi
 | Estado       |  `r  resumen_estados_interacciones[1] `| `r resumen_estados_interacciones[2]` | `r resumen_estados_interacciones[3]`| `r resumen_estados_interacciones[4]`| `r resumen_estados_interacciones[5]`    |
 
 
+Efectivamente, los links y las fotos tienen **medianas y medias** más chicas que las otras dos categorías. Sin embargo, el máximo número de interacciones generadas por las fotos es mayor que el de los otros 3 tipos de post. Como vemos, las medianas de los videos y estados **son parecidas**, sin embargo, **la media** de esta última es **mayor**.
+
+Otro aspecto que destacar es que, si bien los estados y los videos generan más interacciones, también son las que **mayor dispersión** tienen a diferencia de las otras dos categorías.
+
+Como conclusión, los **estados y los videos** son los que **mayor número de interacciones** con tu página generan, ya sea nuevos seguidores, mayor número de me gustas o de contactos.
+
+
+
 ### Interacciones con tu post
 
+Este análisis se refiere a la cantidad de interacciones que **genera tu post**. A diferencia de las interacciones de la página, ahora vamos a analizar solo las interacciones de tu publicación, sin contar los nuevos seguidores ni las visitas al perfil.
+
+Veamos gráficamente como se comportan las publicaciones.
 
 ```{r}
 aux = facebook_data$Total.clicks.en.post
@@ -484,14 +498,19 @@ aux2 = facebook_data$Type[1:length(new)]
 aux2 = c(aux2, "Photo", "Photo")
 
 g8 = ggplot(data = facebook_data, aes(x =new2,y = aux2, fill = Type)) + 
-  geom_boxplot()+
-  labs( x = "Número de Clicks", y = "Tipo de Post")+
-  ggtitle("Número de Clicks en el Post")+
-  scale_fill_brewer(palette = "Accent")
+  geom_boxplot(outlier.colour="red", outlier.size = 1)+
+  labs( x = "Número de interacciones", y = "Tipo de post")+
+  ggtitle("Número de interacciones con tu publicación")+
+  scale_fill_brewer(palette = "Accent")+
+  theme(legend.position = "none")
 
 g8
+
 ```
 
+Como podemos ver en el gráfico, a pesar de que los estados tengan una mediana parecida a la de los videos, su **tercer cuartil es mayor** que el de esta categoría. Sobre los links, vemos que se comportan parecido a las fotos. Sin embargo, esta última tiene una mayor cantidad de outliers o datos extremos.
+
+Veamos que sucede con sus medidas de resúmen.
 
 
 
@@ -515,7 +534,7 @@ fotos_media_interacciones2 = mean(fotos_datos$Total.clicks.en.post)
 fotos_sd_interacciones2 = sd(fotos_datos$Total.clicks.en.post)
 fotos_min_interacciones2 = min(fotos_datos$Total.clicks.en.post)
 fotos_max_interacciones2 = max(fotos_datos$Total.clicks.en.post)
-resumen_fotos_interacciones2 = round(c(fotos_mediana_interacciones2,fotos_media_interacciones2,fotos_sd_interacciones2,fotos_min_interacciones2,fotos_max_interacciones2))
+resumen_fotos_interacciones2 = format(round(c(fotos_mediana_interacciones2,fotos_media_interacciones2,fotos_sd_interacciones2,fotos_min_interacciones2,fotos_max_interacciones2)),scientific = F)
 
 estados_mediana_interacciones2 = median(estados_datos$Total.clicks.en.post)
 estados_media_interacciones2 = mean(estados_datos$Total.clicks.en.post)
@@ -532,6 +551,282 @@ resumen_estados_interacciones2 = round(c(estados_mediana_interacciones2,estados_
 | Foto         |  `r  resumen_fotos_interacciones2[1]  `| `r  resumen_fotos_interacciones2[2] `  | `r  resumen_fotos_interacciones2[3] `| `r  resumen_fotos_interacciones2[4] ` | `r  resumen_fotos_interacciones2[5] `|
 | Video        |  `r  resumen_video_interacciones2[1]  `| `r resumen_video_interacciones2[2]`  | `r resumen_video_interacciones2[3]`| `r  resumen_video_interacciones2[4]  `| `r  resumen_video_interacciones2[5]  `|
 | Estado       |  `r  resumen_estados_interacciones2[1] `| `r resumen_estados_interacciones2[2]` | `r resumen_estados_interacciones2[3]`| `r resumen_estados_interacciones2[4]`| `r resumen_estados_interacciones2[5]`    |
+
+
+Destacamos que, al igual que las interacciones con la página, los estados y los videos tienen una **mayor media y mediana** que la de las otras categorias.  Sin embargo, la media de los estados es de 2800 aproximadamente, mientras que la de los videos es de 2600. Notamos que los links nuevamente son las que **menores interacciones**generan, con  mediana y media bastante pequeña. 
+
+Como conclusión, podemos decir que **los estados** son una las publicaciones que **más interacciones generan**, seguido de los videos. Notamos tambien que los links no suelen generar gran número de interacciones. Sobre las fotos, cabe mencionar que su máximo número de interacciones que genera, tanto en el post como en la página, es mayor que la de las otras 3 categorías.
+
+## Likes, Comentarios y Shares.
+
+```{r}
+
+#Comnetairos
+link_mediana_comentarios2 = median(link_datos$Comment)
+link_media_comentarios2 = mean(link_datos$Comment)
+link_sd_comentarios2 = sd(link_datos$Comment)
+link_min_comentarios2 = min(link_datos$Comment)
+link_max_comentarios2 = max(link_datos$Comment)
+resumen_link_comentarios2 = round(c(link_mediana_comentarios2,link_media_comentarios2,link_sd_comentarios2,link_min_comentarios2,link_max_comentarios2))
+
+estados_mediana_comentarios2 = median(estados_datos$Comment)
+estados_media_comentarios2 = mean(estados_datos$Comment)
+estados_sd_comentarios2 = sd(estados_datos$Comment)
+estados_min_comentarios2 = min(estados_datos$Comment)
+estados_max_comentarios2 = max(estados_datos$Comment)
+resumen_estados_comentarios2 = round(c(estados_mediana_comentarios2,estados_media_comentarios2,estados_sd_comentarios2,estados_min_comentarios2,estados_max_comentarios2))
+
+video_mediana_comentarios2 = median(video_datos$Comment)
+video_media_comentarios2 = mean(video_datos$Comment)
+video_sd_comentarios2 = sd(video_datos$Comment)
+video_min_comentarios2 = min(video_datos$Comment)
+video_max_comentarios2 = max(video_datos$Comment)
+resumen_video_comentarios2 = round(c(video_mediana_comentarios2,video_media_comentarios2,video_sd_comentarios2,video_min_comentarios2,video_max_comentarios2))
+
+fotos_mediana_comentarios2 = median(fotos_datos$Comment)
+fotos_media_comentarios2 = mean(fotos_datos$Comment)
+fotos_sd_comentarios2 = sd(fotos_datos$Comment)
+fotos_min_comentarios2 = min(fotos_datos$Comment)
+fotos_max_comentarios2 = max(fotos_datos$Comment)
+resumen_fotos_comentarios2 = round(c(fotos_mediana_comentarios2,fotos_media_comentarios2,fotos_sd_comentarios2,fotos_min_comentarios2,fotos_max_comentarios2))
+
+#likes
+
+link_mediana_Like2 = median(link_datos$Like)
+link_media_Like2 = mean(link_datos$Like)
+link_sd_Like2 = sd(link_datos$Like)
+link_min_Like2 = min(link_datos$Like)
+link_max_Like2 = max(link_datos$Like)
+resumen_link_Like2 = round(c(link_mediana_Like2,link_media_Like2,link_sd_Like2,link_min_Like2,link_max_Like2))
+
+estados_mediana_Like2 = median(estados_datos$Like)
+estados_media_Like2 = mean(estados_datos$Like)
+estados_sd_Like2 = sd(estados_datos$Like)
+estados_min_Like2 = min(estados_datos$Like)
+estados_max_Like2 = max(estados_datos$Like)
+resumen_estados_Like2 = round(c(estados_mediana_Like2,estados_media_Like2,estados_sd_Like2,estados_min_Like2,estados_max_Like2))
+
+video_mediana_Like2 = median(video_datos$Like)
+video_media_Like2 = mean(video_datos$Like)
+video_sd_Like2 = sd(video_datos$Like)
+video_min_Like2 = min(video_datos$Like)
+video_max_Like2 = max(video_datos$Like)
+resumen_video_Like2 = round(c(video_mediana_Like2,video_media_Like2,video_sd_Like2,video_min_Like2,video_max_Like2))
+
+fotos_mediana_Like2 = median(fotos_datos$Like)
+fotos_media_Like2 = mean(fotos_datos$Like)
+fotos_sd_Like2 = sd(fotos_datos$Like)
+fotos_min_Like2 = min(fotos_datos$Like)
+fotos_max_Like2 = max(fotos_datos$Like)
+resumen_fotos_Like2 = round(c(fotos_mediana_Like2,fotos_media_Like2,fotos_sd_Like2,fotos_min_Like2,fotos_max_Like2))
+
+#likes
+
+link_mediana_Share2 = median(link_datos$Share)
+link_media_Share2 = mean(link_datos$Share)
+link_sd_Share2 = sd(link_datos$Share)
+link_min_Share2 = min(link_datos$Share)
+link_max_Share2 = max(link_datos$Share)
+resumen_link_Share2 = round(c(link_mediana_Share2,link_media_Share2,link_sd_Share2,link_min_Share2,link_max_Share2))
+
+estados_mediana_Share2 = median(estados_datos$Share)
+estados_media_Share2 = mean(estados_datos$Share)
+estados_sd_Share2 = sd(estados_datos$Share)
+estados_min_Share2 = min(estados_datos$Share)
+estados_max_Share2 = max(estados_datos$Share)
+resumen_estados_Share2 = round(c(estados_mediana_Share2,estados_media_Share2,estados_sd_Share2,estados_min_Share2,estados_max_Share2))
+
+video_mediana_Share2 = median(video_datos$Share)
+video_media_Share2 = mean(video_datos$Share)
+video_sd_Share2 = sd(video_datos$Share)
+video_min_Share2 = min(video_datos$Share)
+video_max_Share2 = max(video_datos$Share)
+resumen_video_Share2 = round(c(video_mediana_Share2,video_media_Share2,video_sd_Share2,video_min_Share2,video_max_Share2))
+
+fotos_mediana_Share2 = median(fotos_datos$Share)
+fotos_media_Share2 = mean(fotos_datos$Share)
+fotos_sd_Share2 = sd(fotos_datos$Share)
+fotos_min_Share2 = min(fotos_datos$Share)
+fotos_max_Share2 = max(fotos_datos$Share)
+resumen_fotos_Share2 = round(c(fotos_mediana_Share2,fotos_media_Share2,fotos_sd_Share2,fotos_min_Share2,fotos_max_Share2))
+
+#interacciones totales
+
+estados_mediana_Total2 = median(estados_datos$Total.Interactions)
+estados_media_Total2 = mean(estados_datos$Total.Interactions)
+estados_sd_Total2 = sd(estados_datos$Total.Interactions)
+estados_min_Total2 = min(estados_datos$Total.Interactions)
+estados_max_Total2 = max(estados_datos$Total.Interactions)
+resumen_estados_Total2 = round(c(estados_mediana_Total2,estados_media_Total2,estados_sd_Total2,estados_min_Total2,estados_max_Total2))
+
+video_mediana_Total2 = median(video_datos$Total.Interactions)
+video_media_Total2 = mean(video_datos$Total.Interactions)
+video_sd_Total2 = sd(video_datos$Total.Interactions)
+video_min_Total2 = min(video_datos$Total.Interactions)
+video_max_Total2 = max(video_datos$Total.Interactions)
+resumen_video_Total2 = round(c(video_mediana_Total2,video_media_Total2,video_sd_Total2,video_min_Total2,video_max_Total2))
+
+fotos_mediana_Total2 = median(fotos_datos$Total.Interactions)
+fotos_media_Total2 = mean(fotos_datos$Total.Interactions)
+fotos_sd_Total2 = sd(fotos_datos$Total.Interactions)
+fotos_min_Total2 = min(fotos_datos$Total.Interactions)
+fotos_max_Total2 = max(fotos_datos$Total.Interactions)
+resumen_fotos_Total2 = round(c(fotos_mediana_Total2,fotos_media_Total2,fotos_sd_Total2,fotos_min_Total2,fotos_max_Total2))
+
+link_mediana_Total2 = median(link_datos$Total.Interactions)
+link_media_Total2 = mean(link_datos$Total.Interactions)
+link_sd_Total2 = sd(link_datos$Total.Interactions)
+link_min_Total2 = min(link_datos$Total.Interactions)
+link_max_Total2 = max(link_datos$Total.Interactions)
+resumen_link_Total2 = round(c(link_mediana_Total2,link_media_Total2,link_sd_Total2,link_min_Total2,link_max_Total2))
+
+
+```
+
+
+
+
+```{r}
+com11 = facebook_data$Like
+com11=com11[which(com11< 4000)]
+com22 = c(com11,mean(com11),mean(com11))
+
+com33 = facebook_data$Type[1:length(com22)]
+com44 = c(com33)
+
+
+comentario11 = facebook_data$Comment
+comentario11=comentario11[which(comentario11< 120)]
+comentario22 = c(comentario11,mean(comentario11),mean(comentario11),mean(comentario11))
+
+comentario33 = facebook_data$Type[1:length(comentario22)]
+comentario44 = c(comentario33)
+
+
+
+share11 = facebook_data$Share
+share11=share11[which(share11< 300)]
+share22 = c(share11,mean(share11),mean(share11),mean(share11),mean(share11),mean(share11))
+
+share33 = facebook_data$Type[1:length(share22)]
+share44 = c(share33)
+
+
+inte11 = facebook_data$Total.Interactions
+inte11=inte11[which(inte11< 3000)]
+inte22 = c(inte11,mean(inte11))
+
+inte33 = facebook_data$Type[1:length(inte22)]
+inte44 = c(inte33)
+
+
+
+
+gtotal = ggplot(data = facebook_data, aes(x = inte22, y = inte44, fill = Type)) + 
+  geom_boxplot(outlier.colour="red", outlier.size = 1)+
+  labs( x = "Interacciones totales", y = "Tipo de post")+
+  ggtitle("Número de interacciones totales de tu publicación")+
+  scale_fill_brewer(palette = "Accent")+
+  theme(legend.position = "none")
+
+
+gshare = ggplot(data = facebook_data, aes(x = share22, y = share44, fill = Type)) + 
+  geom_boxplot(outlier.colour="red", outlier.size = 1)+
+  labs( x = "Número de compartidos", y = "Tipo post")+
+  ggtitle("Número de veces que se ha compartido tu post")+
+  scale_fill_brewer(palette = "Accent")+
+  theme(legend.position = "none")
+
+glike = ggplot(data = facebook_data, aes(x = com22,com44, fill = Type)) + 
+  geom_boxplot(outlier.colour="red", outlier.size = 1)+
+  labs( x = "Número de likes de tu publicación", y = "Tipo de post")+
+  ggtitle("Número de likes de tu publicación")+
+  scale_fill_brewer(palette = "Accent")+
+  theme(legend.position = "none")
+
+gcomment = ggplot(data = facebook_data, aes(x = comentario22, y = comentario44, fill = Type)) + 
+  geom_boxplot(outlier.colour="red", outlier.size = 1)+
+  labs( x = "Número de Comentarios de tu Post", y = "Tipo de post")+
+  ggtitle("Número de Comentarios de tu Post")+
+  scale_fill_brewer(palette = "Accent")+
+  theme(legend.position = "none")
+
+
+```
+
+En esta variable vamos a analizar el número de likes, comentarios y veces compartidas de tu post.
+
+### Likes
+
+Esta variable se refiere al número de likes que tiene tu publicación.
+
+Veamos gráficamente como se comportan cada tipo de publicación.
+
+```{r}
+glike
+
+```
+
+Como podemos ver en el gráfico anterior, los videos tienen menor número de likes que las otras categorías. Sobre los otros tipos de publicaciones, podemos ver que la mediana de estados es levemente mayor que la de las fotos y links. Cabe mencionar que las fotos tienen una gran cantidad de outliers. 
+
+### Comentarios
+
+Esta variable se refiere al número de comentarios que tiene tu publicación.
+
+Veamos gráficamente como se comportan.
+
+
+
+```{r}
+gcomment
+
+```
+
+Notamos que, los videos tienen, en general,  el mayor número de comentarios. Sobre las otras tres categorías notamos que son bastante parecidas. Cabe destacar que las fotos, nuevamente, tienen una gran cantidad de outliers.
+
+### Compartidos
+
+Esta variable se refiere al número de veces que se comparte, con otros usuarios, tu publicación.
+
+Veamos gráficamente como se comporta.
+
+```{r}
+gshare
+
+
+```
+
+Como observamos, los estados tienen la mayor mediana, seguido de los links y las fotos. Mientras que los videos son los menos compartidos.
+
+### Total de interacciones.
+
+Esta variable se refiere a la suma de likes, comentarios y shares.
+
+```{r}
+gtotal
+
+```
+
+Como podemos ver los videos tienen, en general, un **mayor número de interacciones** que las otras categorías. Podemos ver que los **links** suelen tener **menos interacciones**. Sobre las fotos y los estados, vemos que estos últimos tienen una mediana levemente mayor. Sin embargo, las fotos siguen teniendo una gran cantidad de outliers
+
+Veamos una tabla del total de interacciones
+
+| Tipo de Post |  Mediana  | Media | Desviación Estándar| Mínimo | Máximo
+| :----------: | :---------: | :---------: | :---------: | :---------: | :---------:|
+| Link         |  `r  resumen_link_Total2[1] ` | `r  resumen_link_Total2[2] `   | `r  resumen_link_Total2[3] ` | `r  resumen_link_Total2[4] `  | `r  resumen_link_Total2[5] `
+| Foto         |   `r  resumen_fotos_Total2[1] ` |`r resumen_fotos_Total2[2] `   | `r  resumen_fotos_Total2[3] ` | `r  resumen_fotos_Total2[4] `  |`r  resumen_fotos_Total2[5] ` |
+| Video        |  `r  resumen_video_Total2[1] `  | `r resumen_video_Total2[2] `  | `r  resumen_video_Total2[3] ` | `r  resumen_video_Total2[4] ` | `r  resumen_video_Total2[5] ` |
+| Estado       | `r  resumen_estados_Total2[1] `  | `r resumen_estados_Total2[2] ` | `r  resumen_estados_Total2[3] ` | `r  resumen_estados_Total2[4] `|  `r  resumen_estados_Total2[5] `   |
+
+Notamos que los **videos** tienen el **mayor número de interacciones**, con una mediana de `r  resumen_video_Total2[1] `. En segundo lugar, tenemos **los estados**, que a pesar de tener la misma media que las fotos, tienen una **mayor mediana**. Cabe destacar que el máximo de interacciones de las fotos es bastante más grande que el máximo de los otros post. Finalmente, tenemos los **links**, con **promedio y mediana menor** que la de las otras tres categorías. 
+
+# Conclusión
+
+**En primer lugar**, para responder que tipo de publicación nos conviene más, hay que ver cuál es tu objetivo. Si nuestro objetivo es hacer un **concurso u ofertas especiales** (Categoría 1, Action) nos conviene publicar un **video** sobre el tema. Como vimos, los videos en general tienen mayor impacto, logrando un alcance más grande que los otros tipos de publicaciones. Sin embargo, algo a tener en cuenta es que nuestra base de datos tiene pocos datos sobre los videos y todos estos son de la categoría action. 
+Otro factor a considerar es que hay una **gran variación** de estos post dentro de las variables que analizamos, es decir, hay una gran diferencia entre el impacto que general los distintos videos.
+**En segundo lugar**, si queremos **promocionar un producto** (Categoría 2, Product) nos conviene publicar un **estado**. Como vimos, estas publicaciones suelen tener menos alcance que las otras publicaciones. Sin embargo, generan un gran número de impresiones, likes, comentarios y se suelen compartir bastante. Además, en la mayoria de las variables analizadas suelen tener una **dispresión bastante pequeña**, por lo que tenemos una mayor seguridad de cuál podría ser el impacto de nuestra publicación.
+**En tercer lugar**, si queremos publicar algo sin un **contenido de marca** (categoría 3, Inspiration) nos conviene **una foto**. Como podemos ver, en nuestra base, las fotos son las únicas que tienen una gran cantidad de datos en esta categoría. Por ende, si queremos tener una idea de como se podría comportar nuestro post, deberíamos publicar una foto. Si bien esta categoría en general no supera a las otras, hay que tener en cuenta que hay una gran cantidad de outliers dentro de todas las variables analizadas. Además, si nuestra publicación es relevante y con buen contenido, es posible que generemos un mayor impacto.
+**Finalmente**, si el contenido de nuestra publicación es realmente bueno y novedoso, también sería buena opción sería publicarlo como **una foto**. A pesar de que, como se mencionó anteriormente, estos post en general no suelen causar más impacto que los otros, notamos que **hay muchos outliers**, en otras palabras, hay publicaciones que tienen más repercusión que todas las otras categorías.
 
 
 
