@@ -312,11 +312,11 @@ resumen_video_alcance = round(c(video_mediana_alcance,video_media_alcance,video_
 | Estado       |  `r  format(resumen_estados_alcance[1], scientific = F) `| `r  format(resumen_estados_alcance[2], scientific = F) ` | `r  resumen_estados_alcance[3] `| `r  resumen_estados_alcance[4] `|`r  format(resumen_estados_alcance[5], scientific = F) `|
 
 
-Podemos observar en la tabla anterior que **los videos tienen mayor mediana y media** que los demás tipos de post. No obstante, al ser pocos datos, tambien tienen una gran dispersión. 
+Podemos observar en la tabla anterior que **los videos tienen mayor mediana y media** que los demás tipos de post. No obstante, al ser pocos datos, también tienen una gran dispersión. 
 
 Además, el **máximo alcance de las fotos** es mayor que el de cualquier otro tipo de post. No obstante, tiene una mediana bastante pequeña, siendo la menor de las categorías. Sobre la media advertimos que es de las más bajas junto con la de los estados.
 
-Esto nos permite afirmar que, en general, los videos suelen tener un mayor alcance que los demás post. Sin embargo, hay que tener en cuenta que hay pocos datos en esta categoria. Cabe destacar que los **Estados tienen una media y  mediana bastante parecida**, por lo que su dispersión es poca, con una desviación bastante pequeña, por lo que es probable que un post se encuentre cercano a estos valores. 
+Esto nos permite afirmar que, en general, los videos suelen tener un mayor alcance que los demás post. Sin embargo, hay que tener en cuenta que hay pocos datos en esta categoría. Cabe destacar que los **Estados tienen una media y  mediana bastante parecida**, por lo que su dispersión es poca, con una desviación bastante pequeña, por lo que es probable que un post se encuentre cercano a estos valores. 
 
 ## Impresiones Totales
 
@@ -394,18 +394,18 @@ resumen_video_impresiones = format(round(c(video_mediana_impresiones,video_media
 | Video        |  `r  resumen_video_impresiones[1]  `| `r resumen_video_impresiones[2]`  | `r resumen_video_impresiones[3]`| `r  resumen_video_impresiones[4]  `| `r  resumen_video_impresiones[5]  `|
 | Estado       |  `r  resumen_estados_impresiones[1] `| `r resumen_estados_impresiones[2]` | `r link_datos$Total.Impressions[3]`| `r resumen_estados_impresiones[4]`| `r resumen_estados_impresiones[5]`    |
 
-Como observamos los post tipo **video son los que tienen mayor mediana y media**. No obstante tienen una gran dispersión en sus datos. Los **link** se comportan parecido a las fotos, sin embargo  el máximo de este último es bastante mayor. Luego, respecto de  los **estados**, vemos que tienen mayor mediana y menor media que las dos categorías anteriores.
+Como observamos los post tipo **video son los que tienen mayor mediana y media**. No obstante, tienen una gran dispersión en sus datos. Los **links** se comportan parecido a las fotos, sin embargo  el máximo de este último es bastante mayor. Luego, respecto de  los **estados**, vemos que tienen mayor mediana y menor media que las dos categorías anteriores.
 
-Esto nos permite afirmar que los **videos tienen un mayor número de impresiones**. No obstante, los **estados tienen una distribución bastante simétrica**, además el mínimo de impresiones es más grande que el de los Link y Fotos. Sobre esta última, algo importante, es que posee varios datos que están por sobre el tercer cuartil, en otras palabras, hay hartas publicaciones que tienen un gran número de impresiones, a pesar de que la categoría tiene una pequeña mediana y media.
+Esto nos permite afirmar que los **videos tienen un mayor número de impresiones**. No obstante, los **estados tienen una distribución bastante simétrica**, además el mínimo de impresiones es más grande que el de los links y fotos. Sobre esta última, algo importante, es que posee varios datos que están por sobre el tercer cuartil, en otras palabras, hay hartas publicaciones que tienen un gran número de impresiones, a pesar de que la categoría tiene una pequeña mediana y media.
 
 
 ## Interacciones 
 
-Esta variable la vamos a separar en dos. En primer lugar, vamos a analizar el número de interacciones que genera cada tipo de post **sobre tu página**. En segundo lugar, vamos a ver como interactua la gente **con tu mismo post**. 
+Esta variable la vamos a separar en dos. En primer lugar, vamos a analizar el número de interacciones que genera cada tipo de post **sobre tu página**. En segundo lugar, vamos a ver cómo interactúa la gente **con tu mismo post**. 
 
 ### Interacciones con tu página
 
-Esta variable se refiere al número total de **interacciones de tu página**, es decir, likes, shares, follow, contacto, busqueda, entre otros.
+Esta variable se refiere al número total de **interacciones de tu página**, es decir, likes, shares, follow, contacto, búsqueda, entre otros.
 
 Veamos gráficamente cómo se comporta
 
@@ -553,11 +553,11 @@ resumen_estados_interacciones2 = round(c(estados_mediana_interacciones2,estados_
 | Estado       |  `r  resumen_estados_interacciones2[1] `| `r resumen_estados_interacciones2[2]` | `r resumen_estados_interacciones2[3]`| `r resumen_estados_interacciones2[4]`| `r resumen_estados_interacciones2[5]`    |
 
 
-Destacamos que, al igual que las interacciones con la página, los estados y los videos tienen una **mayor media y mediana** que la de las otras categorias.  Sin embargo, la media de los estados es de 2800 aproximadamente, mientras que la de los videos es de 2600. Notamos que los links nuevamente son las que **menores interacciones**generan, con  mediana y media bastante pequeña. 
+Destacamos que, al igual que las interacciones con la página, los estados y los videos tienen una **mayor media y mediana** que la de las otras categorías.  Sin embargo, la media de los estados es de 2800 aproximadamente, mientras que la de los videos es de 2600. Notamos que los links nuevamente son las que **menores interacciones** generan, con  mediana y media bastante pequeña. 
 
 Como conclusión, podemos decir que **los estados** son una las publicaciones que **más interacciones generan**, seguido de los videos. Notamos tambien que los links no suelen generar gran número de interacciones. Sobre las fotos, cabe mencionar que su máximo número de interacciones que genera, tanto en el post como en la página, es mayor que la de las otras 3 categorías.
 
-## Likes, Comentarios y Shares.
+## Likes, comentarios y shares.
 
 ```{r}
 
