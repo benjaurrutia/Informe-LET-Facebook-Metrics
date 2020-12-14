@@ -13,11 +13,16 @@ output:
 knitr::opts_chunk$set(echo = FALSE, message= FALSE,warning=FALSE)
 ```
 
+# Resúmen
+
+En este informe se analizará la base de datos `facebook metrics` para ver cuál tipo de publicación, foto, estado, link o video, nos conviene realizar para generar un mayor impacto en esta red social. Estudiaremos las variables más significativas de esta base de datos para realizar el análisis. Luego concluiremos, dependiendo nuestro objetivo, qué publicar para poder llegar a un mayor número de personas y hacer crecer nuestra página. 
+
+
 # Introducción
 
-Hoy en día las redes sociales son cada vez más comunes entre las personas, llegando al punto en el que es muy difícil conocer a alguien que no utilice Twitter, Instagram o **Facebook**. Esta última mencionada es una de las más conocidas. Se estima que hay alrededor de unos **2.400 millones de usuarios activos** [(fuente: Hootsuite ,Febrebo 19, 2020)](https://blog.hootsuite.com/es/estadisticas-de-facebook/#:~:text=1.%20Facebook%20tiene%202.41%20mil,estrategia%20de%20marketing%2C%20es%20esta.). A nivel mundial, sabemos que millones de personas publican distintos tipos de post y cada uno con distintos objetivos, como por ejemplo, vender un producto, informar sobre algún tema, etc.
+Hoy en día las redes sociales son cada vez más comunes entre las personas, llegando al punto en el que es muy difícil conocer a alguien que no utilice Twitter, Instagram o **Facebook**. Esta última mencionada es una de las más conocidas. Se estima que hay alrededor de unos **2.400 millones de usuarios activos**(1). A nivel mundial, sabemos que millones de personas publican distintos tipos de post y cada uno con distintos objetivos, como por ejemplo, vender un producto, informar sobre algún tema, etc.
 
-#respaldar datos 2.400
+
 
   Muchos usuarios buscan crecer en la red social. Para lograr esto, **es de suma importancia saber cómo se comporta tu post**. Es por esto que Facebook implementó estadísticas de cada publicación que uno realiza. Independiente de cual sea el objetivo, uno puede tener información sobre el alcance, número de likes, interacciones, entre otras cosas. No obstante, muchos usuarios no saben cómo utilizar esta herramienta para sacarle un mejor provecho a sus páginas.
 
@@ -25,10 +30,13 @@ Hoy en día las redes sociales son cada vez más comunes entre las personas, lle
 
   En este trabajo vamos a **analizar detalladamente las variables más influyentes** de la base de datos `Facebook metrics Data Set`. Cada variable va a tener una breve explicación de lo que representa. Luego vamos a ver, a través de gráficos y medidas de resúmen, cómo se comporta cada tipo de post para concluir si nos conviene compartir un  video, una foto, un estado o un link, para tener un mayor impacto en esta red social. 
 
+# Metodología
 
+En este informe analizaremos 10 variables de nuestra base de datos. De las cuales hay 2 variables categóricas y 8 númericas. Para realizar el estudio, utilizaremos gráfico de barra y boxplot. Este último está explicado dentro del informe, en la sección `alcance total`. Además utilizaremos estadísticos de resúmen, como la media, desviación estándar, mediana, mínimo y máximo, los cuales los organizaremos en tablas.
 
-# Desarrollo 
+# Resultados 
 
+Estudiemos cómo se comportan las distinas variables de nuestra base de datos.
 
 ```{r}
 library(rio)
@@ -826,10 +834,12 @@ Notamos que los **videos** tienen el **mayor número de interacciones**, con una
 Otro factor a considerar es que hay una **gran variación** de estos post dentro de las variables que analizamos, es decir, hay una gran diferencia entre el impacto que general los distintos videos.
 **En segundo lugar**, si queremos **promocionar un producto** (Categoría 2, Product) nos conviene publicar un **estado**. Como vimos, estas publicaciones suelen tener menos alcance que las otras publicaciones. Sin embargo, generan un gran número de impresiones, likes, comentarios y se suelen compartir bastante. Además, en la mayoria de las variables analizadas suelen tener una **dispresión bastante pequeña**, por lo que tenemos una mayor seguridad de cuál podría ser el impacto de nuestra publicación.
 **En tercer lugar**, si queremos publicar algo sin un **contenido de marca** (categoría 3, Inspiration) nos conviene **una foto**. Como podemos ver, en nuestra base, las fotos son las únicas que tienen una gran cantidad de datos en esta categoría. Por ende, si queremos tener una idea de como se podría comportar nuestro post, deberíamos publicar una foto. Si bien esta categoría en general no supera a las otras, hay que tener en cuenta que hay una gran cantidad de outliers dentro de todas las variables analizadas. Además, si nuestra publicación es relevante y con buen contenido, es posible que generemos un mayor impacto.
-**Finalmente**, si el contenido de nuestra publicación es realmente bueno y novedoso, también sería buena opción sería publicarlo como **una foto**. A pesar de que, como se mencionó anteriormente, estos post en general no suelen causar más impacto que los otros, notamos que **hay muchos outliers**, en otras palabras, hay publicaciones que tienen más repercusión que todas las otras categorías.
+**Finalmente**, si el contenido de nuestra publicación es realmente bueno y novedoso, también sería buena opción publicarlo como **una foto**. A pesar de que, como se mencionó anteriormente, estos post en general no suelen causar más impacto que los otros, notamos que **hay muchos outliers**, en otras palabras, hay publicaciones que tienen más repercusión que todas las otras categorías.
 
 
+# Referencias 
 
+(1) Newberry, C. (2020, 19 julio). 33 estadísticas de Facebook que todo mercadólogo debe conocer en 2020. Social Media Marketing & Management Dashboard. https://blog.hootsuite.com/es/estadisticas-de-facebook/#:%7E:text=1.%20Facebook%20tiene%202.41%20mil,estrategia%20de%20marketing%2C%20es%20esta
 
 
 
